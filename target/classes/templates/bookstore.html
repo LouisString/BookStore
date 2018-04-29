@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="page-enter" content="revealtrans(duration=2.0,transition=21)">
+    <title>Wordladder Home</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+    <link href="/css/buttons.css" rel="stylesheet" />
+    <link href="/css/fontawesome-all.css" rel="stylesheet" />
+    <link href="/css/remodal.css" rel="stylesheet" />
+    <link href="/css/remodal-default-theme.css" rel="stylesheet" />
+
+
+<body>
+    <div th:insert="~{ header :: nav}"></div>
+    <div class="container" style="margin-top: 100px">
+    <div class="col-md-8 col-md-offset-2" >
+        <h1 style="text-align: center;" >Please input two words:</h1>
+        <br>
+        <form>
+
+            <div class="form-group col-md-5">
+                <input type="text" class="form-control" name="word1" id="word1" placeholder="First  Word" />
+            </div>
+
+            <div class="form-group col-md-5">
+                <input type="text" class="form-control" name="word2" id="word2" placeholder="Second Word" />
+            </div>
+
+            <div class="form-group col-md-2">
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </div>
+        </form>
+
+    </div>
+        <div style="padding-top: 80px">
+            <div th:each="book : ${books}" style="text-align: center">
+                <form>
+                    <div class ="expand bookItem col-sm-4">
+                        <div class="col-sm-4 bookImg ">
+                            <img th:id="${book.id}+'img'" class="bookImg img-responsive"
+                                 th:name="(${book.id}%2 == 0)?'/image/bd.jpg' : '/image/potrait.jpg'"
+                                 th:src="(${book.id}%2 == 0)?'/image/bd.jpg' : '/image/potrait.jpg'"/>
+                        </div>
+                        <div class="form-group col-sm-8 bookInfo ">
+                            <div class="titleDiv">
+                                <p class="title" th:text="${book.title}"></p>
+                            </div>
+                            <p class="author" th:text="${book.author}"></p>
+                            <p th:id="${book.id}+'stock'" th:text="${book.stock}" class="stock"></p>
+                            <p class="stockTag">left</p>
+                            <button th:value="${book.id}" type="button" onclick="showBook(this.value)" class="button  button-plain button-box button-border button-tiny detail"><i class="fa fa-tag"></i></button>
+                            <button th:id="${book.id}+'btn'" th:value="${book.id}" type="button" onclick="addToCart(this.value)" class="button button-circle button-action button-tiny buy"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </div>
+    </div>
+    <div class="remodal" data-remodal-id="infomodal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+        <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+        <div>
+            <h2 id="modalTitle">Hey there!</h2>
+            <p id="modalDesc" class="bmodal">
+                Dear customer, you've just added more books to cart than we currently stored!
+                <br/>Click yes to add all of the stock, click no to recall last operation.
+            </p>
+        </div>
+        <br>
+        <button data-remodal-action="cancel" class="remodal-cancel">NO</button>
+        <button data-remodal-action="confirm" class="remodal-confirm">YES</button>
+    </div>
+</body>
+
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/remodal.js"></script>
+<script src="/js/addShopping.js" type="text/javascript"></script>
+<script>
+    function showBook(id) {
+        window.location.assign("bookstore/book?id="+id);
+    }
+    function addToCart(id){
+        var count = 1;
+        var inst = $('[data-remodal-id=infomodal]').remodal();
+        var btnId = id+'btn';
+        var imgId = id+'img';
+        var imgpath = document.getElementById(imgId).name;
+        $('#'+btnId).shoping({
+            endElement:".cartli",
+            iconCSS:"",
+            iconImg:imgpath,
+            endFunction:function(element){
+                console.log(element);
+            }
+        });
+
+        $.get("/bookstore/addtocart?id="+id+"&count="+count, function(data, status){
+            //alert("data:"+data+"\nStatus:"+status);
+            if (data.indexOf("good") >= 0){
+
+            }
+            else if (data.indexOf("over") >= 0){
+                inst.open();
+                $(document).on('confirmation', '.remodal', function () {
+                    $.get("/bookstore/addtocart?id="+id+"&all="+1, function(data, status){});
+                });
+            }
+            else{
+
+            }
+        });
+    }
+</script>
+
+</html>
+

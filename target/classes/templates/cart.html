@@ -1,0 +1,240 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Book Dedail</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/buttons.css" rel="stylesheet"/>
+    <link href="/css/fontawesome-all.css" rel="stylesheet"/>
+    <link href="/css/remodal.css" rel="stylesheet"/>
+    <link href="/css/remodal-default-theme.css" rel="stylesheet"/>
+
+</head>
+<body>
+
+<div th:insert="~{ header :: nav}"></div>
+
+    <div th:if="${messages} != null" class="col-12 col-sm-10 col-sm-offset-1" style="margin-top: 100px">
+        <div th:each="msg:${messages}" class="bctmsg" style="text-align: center">
+            <p th:text="${msg}"></p>
+        </div>
+
+    </div>
+    <div th:if="${items} != null" style="margin-top: 100px">
+        <table>
+            <thead>
+            <tr>
+                <th>Book</th>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <div th:each="item:${items}" style="text-align: center">
+                <tr>
+                    <td data-label="Book">
+                        <div class="bctimg">
+                            <img class="img-responsive bctimgd"
+                                 th:src="(${item.key.id}%2 == 0)?'/image/bd.jpg' : '/image/potrait.jpg'"/>
+                        </div>
+                    </td>
+                    <td data-label="Title">
+                        <p class="bcttitle" th:text="${item.key.title}"></p>
+                    </td>
+                    <td data-label="Amount">
+                        <form>
+                            <div>
+                                <div class="input-group col-sm-12 col-md-8 col-md-offset-2">
+                                    <span class="input-group-btn"><button type="button" th:value="${item.key.id}"
+                                                                          class="btn bctbuyb"
+                                                                          onclick="deduct(this.value)"
+                                                                          onmouseout="changecount(this.value)"><p
+                                            class="bctaddon">-</p></button></span>
+                                    <input class="form-control bctbuyi" th:id="${item.key.id}" type="number"
+                                           th:value="${item.value}" th:name="${item.key.stock}"
+                                           onkeyup="checkInput(this)" onBlur="changecount(this.id)" name="count"
+                                           placeholder="1"/>
+                                    <span class="input-group-btn"><button type="button" th:value="${item.key.id}"
+                                                                          class="btn bctbuyb"
+                                                                          onclick="increase(this.value)"
+                                                                          onmouseout="changecount(this.value)"><p
+                                            class="bctaddon">+</p></button></span>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                    <td data-label="Delete">
+                        <button type="button" th:value="${item.key.id}" onclick="dele(this.value)"
+                                class="button button-tiny button-rounded button-caution">Delete
+                        </button>
+                    </td>
+                </tr>
+            </div>
+            </tbody>
+        </table>
+        <div style="text-align: center; top:30px">
+            <button class="button button-action button-rounded button-small" onclick="order()">Pay</button>
+        </div>
+    </div>
+
+
+    <div th:if="${order} != null" class="col-12"style="top:0;padding-left:0; padding-right:0;">
+        <div class="wonder">
+            <div class="receipt" th:each="oitem:${order}" style="top: 50px">
+                <h2 class="receipt__title">Thank you for shopping!</h2>
+                <p class="receipt__subtitle">Here is the receipt:</p>
+                <ul class="receipt__lines">
+                    <li class="receipt__line" th:each="item: ${oitem.key}">
+                        <span class="receipt__line__item" th:text="${item.key} + '('+ ${item.value.get(0)}+')'"></span>
+                        <span class="receipt__line__price" th:text="'$'+${item.value.get(1)}"></span>
+                    </li>
+                </ul>
+                <p class="receipt__total">
+                    <span class="receipt__total__item">Sum：</span>
+                    <span class="receipt__total__price" th:text="'$'+${oitem.value}"></span>
+                </p>
+                <p class="receipt__back">
+                    <a class="magic" href="/bookstore">View other books!</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+<div class="remodal" data-remodal-id="infomodal" role="dialog" aria-labelledby="modalTitle"
+     aria-describedby="modalDesc">
+    <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+    <div>
+        <h2 id="modalTitle">Attention</h2>
+        <p id="modalDesc" class="bmodal">
+            Are you sure to delete this book ?
+        </p>
+    </div>
+    <br>
+    <button data-remodal-action="cancel" class="remodal-cancel">NO</button>
+    <button data-remodal-action="confirm" class="remodal-confirm">YES</button>
+</div>
+
+<div class="remodal" data-remodal-id="zeromodal" role="dialog" aria-labelledby="zmodalTitle"
+     aria-describedby="zmodalDesc">
+    <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+    <div>
+        <h2 id="zmodalTitle">Emmm</h2>
+        <p id="zmodalDesc" class="bmodal">
+            Seems that you deduct its amount to 0 !<br>
+            Do you wish to delete it or remain one ?
+        </p>
+    </div>
+    <br>
+    <button data-remodal-action="cancel" class="remodal-cancel">Delete</button>
+    <button data-remodal-action="confirm" class="remodal-confirm">Keep one</button>
+</div>
+
+<div class="remodal" data-remodal-id="confirmmodal" role="dialog" aria-labelledby="cmodalTitle"
+     aria-describedby="cmodalDesc">
+    <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+    <div>
+        <h2 id="cmodalTitle">Sweet!</h2>
+        <p id="cmodalDesc" class="bmodal">
+            Pay now? (*•̀ㅂ•́)و
+        </p>
+    </div>
+    <br>
+    <button data-remodal-action="cancel" class="remodal-cancel">No way</button>
+    <button data-remodal-action="confirm" class="remodal-confirm">Of course</button>
+</div>
+
+</body>
+
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/remodal.js"></script>
+<script src="/js/addShopping.js" type="text/javascript"></script>
+
+<script>
+    function deduct(id) {
+        var count = document.getElementById(id).value;
+        if (count >= 1) {
+            document.getElementById(id).value--;
+            count--;
+        }
+    }
+
+    function changecount(id) {
+        var count = document.getElementById(id).value;
+        if (count == null) {
+            alert("count = null");
+            count = 1;
+        }
+        $.get("/bookstore/changecount?id=" + id + "&count=" + count, function(data, status) {
+            // alert("data:"+data+"\nStatus:"+status);
+            if (data.indexOf("good") >= 0) {
+            }
+            else if (data.indexOf("bad") >= 0) {
+                alert("No! Something bad onsets!");
+            }
+            else {
+                alert("No cart");
+            }
+        });
+    }
+
+    function checkInput(obj) {
+        var stock = obj.name;
+        var count = obj.value;
+        if (!/^\d+$/.test(count)) {
+            obj.value = obj.value.replace(/[^\d]+/g, '');
+        }
+        if (obj.value > stock) {
+            obj.value = stock;
+        }
+        if (obj.value.equals("")) {
+            obj.value = 1;
+        }
+    }
+
+    function increase(id) {
+        var count = document.getElementById(id).value;
+        var stock = parseInt(document.getElementById(id).name);
+        if (count < stock) {
+            document.getElementById(id).value++;
+        }
+        else {
+            alert("已达到上限");
+        }
+    }
+
+    function dele(id) {
+        var inst = $('[data-remodal-id=infomodal]').remodal();
+        inst.open();
+        $(document).on('confirmation', '.remodal', function() {
+            $.get("/bookstore/delefromcart?id=" + id, function (data, status) {
+                // alert("data:"+data+"\nStatus:"+status);
+                inst.destroy();
+                if (data.indexOf("good") >= 0) {
+                    window.location="/cart";
+                }
+                else if (data.indexOf("bad") >= 0) {
+                    alert("No! Something bad onsets!");
+                }
+                else {
+                    alert("No cart");
+                }
+            });
+        });
+
+    }
+
+    function order() {
+        var inst = $('[data-remodal-id=confirmmodal]').remodal();
+        inst.open();
+        $(document).on('confirmation', '.remodal', function() {
+            inst.destroy();
+            window.location="/cart/order";
+        });
+    }
+</script>
+</html>
