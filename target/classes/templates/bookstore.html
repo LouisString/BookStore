@@ -19,27 +19,27 @@
     <div th:insert="~{ header :: nav}"></div>
     <div class="container" style="margin-top: 100px">
     <div class="col-md-8 col-md-offset-2" >
-        <h1 style="text-align: center;" >Please input two words:</h1>
+        <h1 style="text-align: center;" >Search for a book by title or author!</h1>
         <br>
         <form>
 
             <div class="form-group col-md-5">
-                <input type="text" class="form-control" name="word1" id="word1" placeholder="First  Word" />
+                <input type="text" class="form-control" name="title" id="title" placeholder="Title" />
             </div>
 
             <div class="form-group col-md-5">
-                <input type="text" class="form-control" name="word2" id="word2" placeholder="Second Word" />
+                <input type="text" class="form-control" name="author" id="author" placeholder="Author" />
             </div>
 
             <div class="form-group col-md-2">
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                <button type="submit" class="btn btn-primary btn-block">Search</button>
             </div>
         </form>
 
     </div>
         <div style="padding-top: 80px">
             <div th:each="book : ${books}" style="text-align: center">
-                <form>
+                <form th:if="${book.stock} gt 0">
                     <div class ="expand bookItem col-sm-4">
                         <div class="col-sm-4 bookImg ">
                             <img th:id="${book.id}+'img'" class="bookImg img-responsive"

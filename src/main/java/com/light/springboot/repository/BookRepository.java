@@ -18,7 +18,7 @@ import java.util.Optional;
 @Repository
 @Table(name="books4")
 @Qualifier("bookRepository")
-public interface BookRepository extends CrudRepository<Book, Long > {
+public interface BookRepository extends JpaRepository<Book, Long > {
     @Nullable
     Optional<Book> findById(Long id);
 

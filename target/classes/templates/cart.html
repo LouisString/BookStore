@@ -18,92 +18,92 @@
 
 <div th:insert="~{ header :: nav}"></div>
 
-    <div th:if="${messages} != null" class="col-12 col-sm-10 col-sm-offset-1" style="margin-top: 100px">
-        <div th:each="msg:${messages}" class="bctmsg" style="text-align: center">
-            <p th:text="${msg}"></p>
-        </div>
-
+<div th:if="${messages} != null" class="col-12 col-sm-10 col-sm-offset-1" style="margin-top: 100px">
+    <div th:each="msg:${messages}" class="bctmsg" style="text-align: center">
+        <p th:text="${msg}"></p>
     </div>
-    <div th:if="${items} != null" style="margin-top: 100px">
-        <table>
-            <thead>
+
+</div>
+<div th:if="${items} != null" style="margin-top: 100px">
+    <table>
+        <thead>
+        <tr>
+            <th>Book</th>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="item:${items}" style="text-align: center">
             <tr>
-                <th>Book</th>
-                <th>Title</th>
-                <th>Amount</th>
-                <th>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            <div th:each="item:${items}" style="text-align: center">
-                <tr>
-                    <td data-label="Book">
-                        <div class="bctimg">
-                            <img class="img-responsive bctimgd"
-                                 th:src="(${item.key.id}%2 == 0)?'/image/bd.jpg' : '/image/potrait.jpg'"/>
-                        </div>
-                    </td>
-                    <td data-label="Title">
-                        <p class="bcttitle" th:text="${item.key.title}"></p>
-                    </td>
-                    <td data-label="Amount">
-                        <form>
-                            <div>
-                                <div class="input-group col-sm-12 col-md-8 col-md-offset-2">
+                <td data-label="Book">
+                    <div class="bctimg">
+                        <img class="img-responsive bctimgd"
+                             th:src="(${item.key.id}%2 == 0)?'/image/bd.jpg' : '/image/potrait.jpg'"/>
+                    </div>
+                </td>
+                <td data-label="Title">
+                    <p class="bcttitle" th:text="${item.key.title}"></p>
+                </td>
+                <td data-label="Amount">
+                    <form>
+                        <div>
+                            <div class="input-group col-sm-12 col-md-8 col-md-offset-2">
                                     <span class="input-group-btn"><button type="button" th:value="${item.key.id}"
                                                                           class="btn bctbuyb"
                                                                           onclick="deduct(this.value)"
                                                                           onmouseout="changecount(this.value)"><p
                                             class="bctaddon">-</p></button></span>
-                                    <input class="form-control bctbuyi" th:id="${item.key.id}" type="number"
-                                           th:value="${item.value}" th:name="${item.key.stock}"
-                                           onkeyup="checkInput(this)" onBlur="changecount(this.id)" name="count"
-                                           placeholder="1"/>
-                                    <span class="input-group-btn"><button type="button" th:value="${item.key.id}"
-                                                                          class="btn bctbuyb"
-                                                                          onclick="increase(this.value)"
-                                                                          onmouseout="changecount(this.value)"><p
-                                            class="bctaddon">+</p></button></span>
-                                </div>
+                                <input class="form-control bctbuyi" th:id="${item.key.id}" type="number"
+                                       th:value="${item.value}" th:name="${item.key.stock}"
+                                       onkeyup="checkInput(this)" onBlur="changecount(this.id)" name="count"
+                                       placeholder="1"/>
+                                <span class="input-group-btn"><button type="button" th:value="${item.key.id}"
+                                                                      class="btn bctbuyb"
+                                                                      onclick="increase(this.value)"
+                                                                      onmouseout="changecount(this.value)"><p
+                                        class="bctaddon">+</p></button></span>
                             </div>
-                        </form>
-                    </td>
-                    <td data-label="Delete">
-                        <button type="button" th:value="${item.key.id}" onclick="dele(this.value)"
-                                class="button button-tiny button-rounded button-caution">Delete
-                        </button>
-                    </td>
-                </tr>
-            </div>
-            </tbody>
-        </table>
-        <div style="text-align: center; top:30px">
-            <button class="button button-action button-rounded button-small" onclick="order()">Pay</button>
+                        </div>
+                    </form>
+                </td>
+                <td data-label="Delete">
+                    <button type="button" th:value="${item.key.id}" onclick="dele(this.value)"
+                            class="button button-tiny button-rounded button-caution">Delete
+                    </button>
+                </td>
+            </tr>
         </div>
+        </tbody>
+    </table>
+    <div style="text-align: center; top:30px">
+        <button class="button button-action button-rounded button-small" onclick="order()">Pay</button>
     </div>
+</div>
 
 
-    <div th:if="${order} != null" class="col-12"style="top:0;padding-left:0; padding-right:0;">
-        <div class="wonder">
-            <div class="receipt" th:each="oitem:${order}" style="top: 50px">
-                <h2 class="receipt__title">Thank you for shopping!</h2>
-                <p class="receipt__subtitle">Here is the receipt:</p>
-                <ul class="receipt__lines">
-                    <li class="receipt__line" th:each="item: ${oitem.key}">
-                        <span class="receipt__line__item" th:text="${item.key} + '('+ ${item.value.get(0)}+')'"></span>
-                        <span class="receipt__line__price" th:text="'$'+${item.value.get(1)}"></span>
-                    </li>
-                </ul>
-                <p class="receipt__total">
-                    <span class="receipt__total__item">Sum：</span>
-                    <span class="receipt__total__price" th:text="'$'+${oitem.value}"></span>
-                </p>
-                <p class="receipt__back">
-                    <a class="magic" href="/bookstore">View other books!</a>
-                </p>
-            </div>
+<div th:if="${order} != null" class="col-12"style="top:0;padding-left:0; padding-right:0;">
+    <div class="wonder">
+        <div class="receipt" th:each="oitem:${order}" style="top: 50px">
+            <h2 class="receipt__title">Thank you for shopping!</h2>
+            <p class="receipt__subtitle">Here is the receipt:</p>
+            <ul class="receipt__lines">
+                <li class="receipt__line" th:each="item: ${oitem.key}">
+                    <span class="receipt__line__item" th:text="${item.key} + '('+ ${item.value.get(0)}+')'"></span>
+                    <span class="receipt__line__price" th:text="'$'+${item.value.get(1)}"></span>
+                </li>
+            </ul>
+            <p class="receipt__total">
+                <span class="receipt__total__item">Sum：</span>
+                <span class="receipt__total__price" th:text="'$'+${oitem.value}"></span>
+            </p>
+            <p class="receipt__back">
+                <a class="magic" href="/bookstore">View other books!</a>
+            </p>
         </div>
     </div>
+</div>
 
 <div class="remodal" data-remodal-id="infomodal" role="dialog" aria-labelledby="modalTitle"
      aria-describedby="modalDesc">
@@ -188,11 +188,8 @@
         if (!/^\d+$/.test(count)) {
             obj.value = obj.value.replace(/[^\d]+/g, '');
         }
-        if (obj.value > stock) {
+        else if (parseInt(obj.value) > stock) {
             obj.value = stock;
-        }
-        if (obj.value.equals("")) {
-            obj.value = 1;
         }
     }
 

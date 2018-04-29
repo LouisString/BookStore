@@ -4,8 +4,11 @@ package com.light.springboot.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name="books4")
+@Table(name = "books4")
 public class Book {
+
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -19,6 +22,23 @@ public class Book {
     private Long stock;
     private int star;
 
+    public Book() {
+
+    }
+
+    public Book(Book b) {
+        this.id = b.getId();
+        this.title = b.getTitle();
+        this.author = b.getAuthor();
+        this.language = b.getLanguage();
+        this.published = b.getPublished();
+        this.sales = b.getSales();
+        this.price = b.getPrice();
+        this.description = b.getDescription();
+        this.star = b.getStar();
+        this.stock = b.getStock();
+
+    }
 
     public Long getId() {
         return id;
@@ -88,7 +108,7 @@ public class Book {
         return stock;
     }
 
-    public void setStock(Long price) {
+    public void setStock(Long stock) {
         this.stock = stock;
     }
 

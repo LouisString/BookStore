@@ -172,14 +172,24 @@ public class BookstoreController {
             out.println("no cart");
             out.close();
         }
-        else {
+        else if (count != null){
             if (cart.containsKey(id)) {
                 cart.put(id, count);
+                System.out.println("update--"+id+":"+count);
                 session.setAttribute("cart", cart);
                 out.println("good");
                 out.close();
             } else {
                 out.println("bad");
+                out.close();
+            }
+        }
+        else{
+            if (cart.containsKey(id)) {
+                cart.put(id, Long.valueOf(1));
+                System.out.println("update--"+id+":"+cart.get(id));
+                session.setAttribute("cart", cart);
+                out.println("good");
                 out.close();
             }
         }
