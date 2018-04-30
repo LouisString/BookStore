@@ -7,8 +7,6 @@ import javax.persistence.*;
 @Table(name = "books4")
 public class Book {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
