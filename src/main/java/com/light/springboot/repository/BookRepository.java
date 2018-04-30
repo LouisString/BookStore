@@ -4,7 +4,9 @@ import com.light.springboot.entity.Book;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
@@ -40,5 +42,18 @@ public interface BookRepository extends JpaRepository<Book, Long > {
     @Nullable
     List<Book> findByPrice(Long price);
 
+    @Nullable
+    @Query("select book from Book book where lower(book.title) like CONCAT('%',lower(:title),'%') " +
+            "and  lower(book.author) like concat('%',lower(:author),'%') and book.stock > 0")
+    List<Book> findByTitleAndAuthorNoFormat(@Param("title") String title, @Param("author") String author);
 
+    @Nullable
+    @Query("select book from Book book where lower(book.title) like CONCAT('%',lower(:title),'%') " +
+            "and book.stock > 0")
+    List<Book> findByTitleNoFormat(@Param("title") String title);
+
+    @Nullable
+    @Query("select book from Book book where lower(book.author) like CONCAT('%',lower(:author),'%') " +
+            "and book.stock > 0 ")
+    List<Book> findByAuthorNoFormat(@Param("author") String author);
 }

@@ -37,8 +37,10 @@
         </form>
 
     </div>
-        <div style="padding-top: 80px">
-            <div th:each="book : ${books}" style="text-align: center">
+        <div id="booknfmsg" class="row col-xs-12" style="text-align: center;">
+        </div>
+        <div id="bookslides" style="padding-top: 80px">
+            <div th:each="book : ${books}" style="text-align: center;">
                 <form th:if="${book.stock} gt 0">
                     <div class ="expand bookItem col-sm-4">
                         <div class="col-sm-4 bookImg ">
@@ -116,11 +118,56 @@
     }
 
     function search() {
-        var title= document.getElementById("title").innerText;
-        var author = document.getElementById("author").innerText;
-        if (title != null && author != null){
+        var title= document.getElementById("title").value;
+        var author = document.getElementById("author").value;
+            $.get("bookstore/search",
+                {title: title, author: author}
+                ,function(data, status){
+                    var html="";
+                    if (data.length === 0){
+                        html='<div style="text-align: center; ">'+
+                                '<p class="bctmsg" style="text-align: center; position: absolute;left: 50%; transform: translate(-50%)">' +
+                                    'Sorry, no books like that are found <font style="font-weight: normal"> இдஇ </font></p>'+
+                            '</div>';
+                        $("#bookslides").html("");
+                        $("#booknfmsg").html(html);
+                    }
+                    else{
+                        for(var i=0;i<data.length;i++){
+                            html+='<div style="text-align: center;">'+
+                                '<form>'+
+                                '<div class ="expand bookItem col-sm-4">'+
+                                '<div class="col-sm-4 bookImg">'+
+                                '<img id="'+data[i].id+'img'+'" class="bookImg img-responsive" '+
+                                'name="'+ ((data[i].id % 2===0)?'/image/bd.jpg':'/image/potrait.jpg') + '" '+
+                                'src="'+ ((data[i].id % 2===0)?'/image/bd.jpg':'/image/potrait.jpg') + '"/> '+
+                                '</div>'+
+                                '<div class="form-group col-sm-8 bookInfo ">'+
+                                '<div class="titleDiv">'+
+                                '<p class="title">'+data[i].title+'</p>'+
+                                '</div>'+
+                                '<p class="author">'+data[i].author+'</p>'+
+                                '<p id="'+ data[i].id + 'stock'+'" class="stock">'+data[i].stock+'</p>'+
+                                '<p class="stockTag">left</p>'+
+                                '<button value="'+ data[i].id +'" type="button" onclick="showBook(this.value)" ' +
+                                'class="button  button-plain button-box button-border button-tiny detail">' +
+                                '<i class="fa fa-tag"></i>' +
+                                '</button>'+
+                                '<button id="'+ data[i].id +'btn'+'" value="'+ data[i].id + '" type="button" ' +
+                                'onclick="addToCart(this.value)" class="button button-circle button-action button-tiny buy">' +
+                                '<i class="fa fa-plus"></i>' +
+                                '</button>'+
+                                '</div>'+
+                                '</div>'+
+                                '</form>'+
+                                '</div>';
 
-        }
+                        }
+                        $("#bookslides").html(html);
+                        $("#booknfmsg").html('');
+                    }
+            });
+
     }
 </script>
 

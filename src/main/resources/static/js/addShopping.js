@@ -25,7 +25,6 @@
 					$(self).on('click',this.addShoping);
 				},
 				addShoping:function(e){
-					e.stopPropagation();
 					var $target=$(e.target),
 					    x = $target.offset().left + 30,
 						y = $target.offset().top + 10,

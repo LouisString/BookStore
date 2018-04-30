@@ -150,7 +150,7 @@
 
     function deduct(){
         var count =  document.getElementById('count').value;
-        if (count>=1){
+        if (count>1){
             document.getElementById('count').value--;
         }
     }
@@ -159,9 +159,6 @@
         var inputdom = document.getElementById('count');
         var stock = parseInt(document.getElementById('stock').innerText);
         var count = inputdom.value;
-        if(!/^\d+$/.test(count)) {
-            inputdom.value=inputdom.value.replace(/[^\d]+/g,'');
-        }
         if (count > stock){
             inputdom.value = stock;
         }
@@ -186,6 +183,10 @@
         var btnId = id+'btn';
         var imgId = id+'img';
         var imgpath = document.getElementById(imgId).name;
+
+        if (count === ""){
+            count = 1;
+        }
 
         $('#'+btnId).shoping({
             endElement:".cartli",

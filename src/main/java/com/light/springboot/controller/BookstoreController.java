@@ -5,10 +5,7 @@ import com.light.springboot.entity.Book;
 import com.light.springboot.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.GeneratedValue;
@@ -36,7 +33,7 @@ public class BookstoreController {
     }
 
 
-    @RequestMapping(path="book", params="id")
+    @RequestMapping(path="/book", params="id")
     @ResponseBody
     public ModelAndView getBookById(@RequestParam("id") Long id){
         Optional<Book> book = bookRepository.findById(id);
@@ -57,7 +54,7 @@ public class BookstoreController {
 
     }
 
-    @RequestMapping(path="addtocart",params={"id", "count"})
+    @RequestMapping(path="/addtocart",params={"id", "count"})
     @ResponseBody
     public void addtocar(@RequestParam("id") Long id, @RequestParam("count") Long count,
                          HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -99,7 +96,7 @@ public class BookstoreController {
 
     }
 
-    @RequestMapping(path="addtocart",params={"id", "all"})
+    @RequestMapping(path="/addtocart",params={"id", "all"})
     @ResponseBody
     public void addalltocar(@RequestParam("id") Long id,
                          HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -194,6 +191,32 @@ public class BookstoreController {
             }
         }
     }
+
+    @RequestMapping(path="search")
+    @ResponseBody
+    public List<Book> search(HttpServletRequest request){
+        System.out.println("haha");
+        String title=request.getParameter("title");
+        String author=request.getParameter("author");
+        System.out.println(title+":"+(author.equals("")));
+        if (!title.equals("") && !author.equals("")){
+            System.out.println("ta");
+            return bookRepository.findByTitleAndAuthorNoFormat(title, author);
+        }
+        else if (!title.equals("")){
+            System.out.println("t");
+            return bookRepository.findByTitleNoFormat(title);
+        }
+        else if (!author.equals("")){
+            System.out.println("a");
+            return bookRepository.findByAuthorNoFormat(author);
+        }
+        else{
+            System.out.println("no");
+            return bookRepository.findAll();
+        }
+    }
+
 
     @RequestMapping("/saveBook")
     @ResponseBody

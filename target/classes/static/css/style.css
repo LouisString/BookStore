@@ -454,7 +454,6 @@ p.bstocka {
 .bctimg {
     overflow: hidden;
     height: 90px;
-    background-color: coral;
 }
 
 .bctimgd {
@@ -488,6 +487,7 @@ p.bstocka {
 .bctmsg {
     font-family: Lato-Hairline;
     font-size: 20px;
+    font-weight: bold;
 }
 
 .bctbuyb {
