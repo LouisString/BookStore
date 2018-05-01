@@ -2,9 +2,10 @@ package com.light.springboot.entity;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "books4")
+
 public class Book {
 
     @Id
@@ -19,6 +20,10 @@ public class Book {
     private String description;
     private Long stock;
     private int star;
+
+    @OneToMany(cascade = {CascadeType.ALL},fetch = FetchType.EAGER)
+    @JoinColumn(name="id")
+    private List<Comment> comments;
 
     public Book() {
 
@@ -118,4 +123,11 @@ public class Book {
         this.star = star;
     }
 
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
 }

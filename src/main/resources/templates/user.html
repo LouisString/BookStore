@@ -4,6 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/buttons.css" rel="stylesheet"/>
+    <link href="/css/fontawesome-all.css" rel="stylesheet"/>
 </head>
 
 <body style="background-color: #f1f1f1; padding-bottom: 0">
@@ -12,17 +15,112 @@
 
 <div class="container" style="margin-top: 60px">
 
-
-    <div style="text-align: center; margin-top: 10%">
-        <img src="/image/potrait.jpg" alt="avatar" class="img-circle" style="margin: 0 auto;height: 250px">
-        <p th:text="${username}" style="margin-top: 25px; font-size: 20; color: crimson">Sun</p>
-        <form th:action="@{/logout}" method="post">
-            <button class="btn btn-danger" style="margin-top: 20px">Logout</button>
-        </form>
+    <div style="text-align: center; margin-top: 5%" id="avatarDiv">
+        <img th:src="'/image/users/'+${user.getId()}+'_image.jpg'" alt="avatar" id="avatar" class="img-circle"
+             th:name="'/image/users/'+${user.getId()}+'_image.jpg'" style="margin: 0 auto;height: 250px">
+        <p th:text="${user.getUsername()}" style="margin-top: 25px; font-size: 20; color: crimson">Sun</p>
+        <div class="col-12 col-sm-offset-4 col-sm-4">
+            <form th:action="@{/logout}" method="post" class="col-12 col-xs-4 col-xs-offset-2"
+                  style="float: left; margin-top: 20px">
+                <button class="button button-small button-rounded button-caution">Logout</button>
+            </form>
+            <form style="float: left; margin-top: 20px">
+                <div class="col-12 col-xs-4">
+                    <button type="button" id="uploadbtn"
+                            class="button button-small button-rounded button-royal uspotrait">Portrait
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <div id="uploadDiv" style="display: none;text-align: center; margin-top: 10%">
+        <div class="container">
+            <div class="row">
+                <div class="imageBox col-sm-4 col-sm-offset-4">
+                    <div class="thumbBox"></div>
+                    <div class="spinner" style="display: none"></div>
+                </div>
+            </div>
+            <div class="row" style="text-align: center; padding-top:20px;">
+                <label class="ui_button ui_button_primary" for="file">Choose File</label>
+                <form><input type="file" id="file" name="imageName" style="position:absolute;clip:rect(0 0 0 0)"></form>
+            </div>
+            <div class="row col-sm-4 col-sm-offset-4" style="text-align: center;padding-top:15px">
+                <div class="burbtns">
+                    <button type="button" class="button button-small  button-plain button-border button-circle burcmbtn" id="btnZoomIn">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <button type="button" class="button button-small button-rounded button-highlight" id="btnCommit">Commit</button>
+                    <button type="button" class="button button-small  button-plain button-border button-circle burcmbtn"
+                            id="btnZoomOut">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
 </div>
 
 </body>
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/cropbox.js"></script>
+<script type="text/javascript">
+
+    $('.imageBox').hover(
+        function(){
+            var top=$('body').scrollTop();
+            $(window).scroll(function(){ //滚动时，固定页面滚动条到页顶的高度，使其不滚动
+                $('body').scrollTop(top);
+            });
+        },function(){
+            $(window).off('scroll'); //鼠标移开后，解除固定
+        });
+
+    $(document).ready(function () {
+        var options =
+            {
+                thumbBox: '.thumbBox',
+                spinner: '.spinner',
+                imgSrc: ''
+            };
+        var cropper;
+
+        $('#uploadbtn').on('click', function(){
+            document.getElementById("uploadDiv").style.display = "";
+            options.imgSrc = document.getElementById('avatar').name;
+            cropper=$('.imageBox').cropbox(options);
+            document.getElementById("avatarDiv").style.display = "none";
+        });
+        $('#file').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                options.imgSrc = e.target.result;
+                cropper = $('.imageBox').cropbox(options);
+            };
+            reader.readAsDataURL(this.files[0]);
+            this.files = [];
+        });
+
+        $('#btnCommit').on('click', function () {
+            var imgcode = cropper.getDataURL();
+            $.get("/user/uploadImage", {imgcode: imgcode}, function (data, status) {
+            });
+            document.getElementById("uploadDiv").style.display = "none";
+            document.getElementById("avatarDiv").style.display = "";
+        });
+
+        $('#btnZoomIn').on('click', function () {
+            cropper.zoomIn();
+        });
+        $('#btnZoomOut').on('click', function () {
+            cropper.zoomOut();
+        })
+    });
+
+</script>
 
 </html>

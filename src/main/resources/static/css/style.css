@@ -1,7 +1,11 @@
 html, body {
     height: 1000px;
 }
-
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0;
+}
 @font-face {
     font-family: Lato-Hairline;
     src: url("/font/Lato-HairlineItalic.ttf");
@@ -275,7 +279,7 @@ button.buy {
 
 .bimg {
     overflow: hidden;
-    height: 190px;
+    height: 220px;
     border-radius: 5px 5px 5px 5px;
 }
 
@@ -288,7 +292,7 @@ button.buy {
     transform: translate(-50%, -50%);
 
     overflow: hidden;
-    height: 190px;
+    height: 220px;
 }
 
 .binfo {
@@ -433,7 +437,7 @@ p.bstocka {
 }
 
 .baddbtn {
-    margin-top: 5px;
+    margin-top: 10px;
     background-color: palevioletred;
 }
 
@@ -476,6 +480,8 @@ p.bstocka {
     font-weight: bolder;
     font-size: 18px;
     background-color: cadetblue;
+    width:auto;
+    border-radius: 10px 10px 10px 10px;
 }
 
 .bctcount {
@@ -492,7 +498,6 @@ p.bstocka {
 
 .bctbuyb {
     height: 20px;
-
 }
 
 .bctbuyi {
@@ -527,6 +532,7 @@ table tr {
 table th, table td {
     padding: 10px;
     text-align: center;
+    width:25%;
 }
 
 table th {
@@ -556,6 +562,7 @@ table th {
         text-align: right;
         font-size: 13px;
         border-bottom: 1px dotted #ccc;
+        width: auto;
     }
 
     table td:last-child {
@@ -573,6 +580,10 @@ table th {
 .note {
     max-width: 80%;
     margin: 0 auto;
+}
+
+button.uspotrait{
+    background-color: #e57373;
 }
 
 /* 清单*/
@@ -675,4 +686,73 @@ a.magic {
 
 .receipt__back {
     text-align: center;
+}
+
+/*图片裁剪*/
+.imageBox
+{
+    height: 400px;
+    width: 400px;
+    border:1px solid #aaa;
+    background: #fff;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    cursor:move;
+    border-radius: 20px 20px 20px 20px;
+}
+
+.imageBox .thumbBox
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    margin-top: -100px;
+    margin-left: -100px;
+    box-sizing: border-box;
+    border: 1px solid rgb(102, 102, 102);
+    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+    background: none repeat scroll 0% 0% transparent;
+    border-radius: 200px 200px 200px 200px;
+}
+
+/*input file 美化*/
+.imageBox .spinner
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    line-height: 400px;
+    background: rgba(0,0,0,0.7);
+}
+
+.ui_button {
+    display: inline-block;
+    line-height: 45px;
+    padding: 0 70px;
+    color: #FFFFFF;
+    font-family: "微软雅黑";
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 5px 5px 5px 5px;
+}
+.ui_button_primary {
+    background-color: #FF6600;
+}
+label.ui_button:hover {
+    background-color: #d46216;
+}
+
+.burbtns{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+button.burcmbtn{
+    background-color: #eb7a73;
 }

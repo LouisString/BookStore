@@ -45,8 +45,8 @@
                     <div class ="expand bookItem col-sm-4">
                         <div class="col-sm-4 bookImg ">
                             <img th:id="${book.id}+'img'" class="bookImg img-responsive"
-                                 th:name="(${book.id}%2 == 0)?'/image/bd.jpg' : '/image/potrait.jpg'"
-                                 th:src="(${book.id}%2 == 0)?'/image/bd.jpg' : '/image/potrait.jpg'"/>
+                                 th:name="'/image/books/'+${book.id}+'_image.jpg'"
+                                 th:src="'/image/books/'+${book.id}+'_image.jpg'"/>
                         </div>
                         <div class="form-group col-sm-8 bookInfo ">
                             <div class="titleDiv">
@@ -139,8 +139,10 @@
                                 '<div class ="expand bookItem col-sm-4">'+
                                 '<div class="col-sm-4 bookImg">'+
                                 '<img id="'+data[i].id+'img'+'" class="bookImg img-responsive" '+
-                                'name="'+ ((data[i].id % 2===0)?'/image/bd.jpg':'/image/potrait.jpg') + '" '+
-                                'src="'+ ((data[i].id % 2===0)?'/image/bd.jpg':'/image/potrait.jpg') + '"/> '+
+                               /* th:name="'/image/books/'+${book.id}+'_image.jpg'"*/
+                            /*th:src="'/image/books/'+${book.id}+'_image.jpg'"*/
+                                'name="/image/books/'+ data[i].id + '_image.jpg" '+
+                                'src="/image/books/'+ data[i].id +'_image.jpg"/> '+
                                 '</div>'+
                                 '<div class="form-group col-sm-8 bookInfo ">'+
                                 '<div class="titleDiv">'+
