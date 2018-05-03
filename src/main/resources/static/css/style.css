@@ -85,7 +85,7 @@ input::-webkit-inner-spin-button{
 p.title {
     font-family: Lato-Hairline;
     position: absolute;
-    font-weight: bolder;
+    font-weight: bold;
     font-size: 15px;
     top: 50%;
     left: 50%;

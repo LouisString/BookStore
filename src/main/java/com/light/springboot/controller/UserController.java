@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import java.io.PrintWriter;
 import java.util.*;
 
 
@@ -336,6 +337,38 @@ public class UserController {
 
     }
 
+    @RequestMapping("/user/delefromorder")
+    @ResponseBody
+    public void deleteFromOrder(Long oid, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        oid = Long.parseLong(request.getParameter("orderId"));
+        PrintWriter out = response.getWriter();
+
+        SecurityContext ctx = SecurityContextHolder.getContext();
+        Authentication auth = ctx.getAuthentication();
+        User user = (User) auth.getPrincipal();
+
+        List<BookOrder> b = orderRepository.findByOrderId(oid);
+
+        if (b.size() == 0) {
+            out.println("bad");
+            out.close();
+        } else {
+            orderRepository.deleteByOrderId(oid);
+            Set<BookOrder> userOldOrders = user.getOrders();
+            Iterator<BookOrder> it = userOldOrders.iterator();
+            for(int i=0; i<userOldOrders.size();i++){
+                BookOrder oOrder = it.next();
+                if(oOrder.getOrderPK().getOid().equals(oid)){
+                    it.remove();
+                    i--;
+                }
+            }
+
+            out.println("good");
+            out.close();
+        }
+    }
 }
 
 

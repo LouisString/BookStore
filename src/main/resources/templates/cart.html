@@ -175,24 +175,26 @@
                 && state3 !== 'opened' && state3 !== 'opening') {
                 inst.open();
                 $(document).on('cancellation', '.remodal', function () {
-                    /*there is a sh*ting bug and have brought me weariness and suppression */
-                    if (inst.getState() === 'closed'||inst.getState() === 'closing'){
-                        return;
-                    }
-                    inst.close();
-                    $.get("/bookstore/delefromcart?id=" + id, function (data, status) {
-                        // alert("data:"+data+"\nStatus:"+status);
-                        if (data.indexOf("good") >= 0) {
-                            window.location = "/cart";
-                        }
-                        else if (data.indexOf("bad") >= 0) {
-                            alert("No! Something bad onsets!");
-                        }
-                        else {
-                            alert("No cart");
-                        }
+                    /*there is a sh*ting bug and have brought me weariness and suppression,
+                     * I've thought I've figured, but...Fortunately 2018/5/3/20:13 I finally do it!! */
+                    if (id !== null){
+                        $.get("/bookstore/delefromcart?id=" + id, function (data, status) {
+                            // alert("data:"+data+"\nStatus:"+status);
+                            if (data.indexOf("good") >= 0) {
+                                window.location = "/cart";
+                            }
+                            else if (data.indexOf("bad") >= 0) {
+                                alert("No! Something bad onsets!");
+                            }
+                            else {
+                                alert("No cart");
+                            }
                         });
-                     });
+                    }
+                });
+                $(document).on('confirmation', '.remodal', function (){
+                    id=null;
+                });
             }
         }
     }
@@ -248,22 +250,23 @@
             &&state3 !== 'opened' && state3 !== 'opening'){
             inst.open();
             $(document).on('confirmation', '.remodal', function () {
-                if (inst.getState() === 'closed'||inst.getState() === 'closing'){
-                    return;
+                if (id !== null){
+                    $.get("/bookstore/delefromcart?id=" + id, function (data, status) {
+                        // alert("data:"+data+"\nStatus:"+status);
+                        if (data.indexOf("good") >= 0) {
+                            window.location = "/cart";
+                        }
+                        else if (data.indexOf("bad") >= 0) {
+                            alert("No! Something bad onsets!");
+                        }
+                        else {
+                            alert("No cart");
+                        }
+                    });
                 }
-                inst.close();
-                $.get("/bookstore/delefromcart?id=" + id, function (data, status) {
-                    // alert("data:"+data+"\nStatus:"+status);
-                    if (data.indexOf("good") >= 0) {
-                        window.location = "/cart";
-                    }
-                    else if (data.indexOf("bad") >= 0) {
-                        alert("No! Something bad onsets!");
-                    }
-                    else {
-                        alert("No cart");
-                    }
-                });
+            });
+            $(document).on('cancellation', '.remodal', function (){
+                id=null;
             });
         }
     }

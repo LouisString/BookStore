@@ -7,10 +7,12 @@ import com.light.springboot.entity.BookOrder;
 import com.light.springboot.entity.OrderPrimaryKey;
 import com.light.springboot.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.Nullable;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,5 +34,10 @@ public interface BookOrderRepository extends JpaRepository<BookOrder, OrderPrima
 
     @Query(value="select count(*) from bookorder", nativeQuery = true)
     Long getSize();
+
+    @Modifying
+    @Transactional
+    @Query(value="delete from bookorder where oid = :orderId", nativeQuery = true)
+    int deleteByOrderId(@Param("orderId") Long orderId);
 
 }
