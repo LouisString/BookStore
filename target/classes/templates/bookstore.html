@@ -6,8 +6,8 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta http-equiv="page-enter" content="revealtrans(duration=2.0,transition=21)">
-    <title>Wordladder Home</title>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet" />
+    <title>Store</title>
+    <link href="/css/bootstrap.css" rel="stylesheet"/>
     <link href="/css/style.css" rel="stylesheet" />
     <link href="/css/buttons.css" rel="stylesheet" />
     <link href="/css/fontawesome-all.css" rel="stylesheet" />
@@ -79,6 +79,7 @@
 </body>
 
 <script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/bootstrap.js"></script>
 <script src="/js/remodal.js"></script>
 <script src="/js/addShopping.js" type="text/javascript"></script>
 <script>
@@ -168,7 +169,14 @@
                         $("#bookslides").html(html);
                         $("#booknfmsg").html('');
                     }
+
+                    document.getElementById("title").value='';
+                    document.getElementById("author").value='';
+                    $("#title").attr('placeholder', (title === "")?'Title':title);
+                    $("#author").attr('placeholder', (author === "")?'Author':author);
+
             });
+
 
     }
 </script>

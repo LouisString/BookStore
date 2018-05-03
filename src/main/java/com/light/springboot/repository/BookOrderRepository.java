@@ -24,6 +24,12 @@ public interface BookOrderRepository extends JpaRepository<BookOrder, OrderPrima
     @Query("select bookOrder from BookOrder bookOrder where bookOrder.orderPK.uid = :userId")
     List<BookOrder> findByUserId(@Param("userId") Long userId);
 
+    @Query("select bookOrder from BookOrder bookOrder where bookOrder.orderPK.oid = :orderId")
+    List<BookOrder> findByOrderId(@Param("orderId") Long orderId);
+
+    @Query(value="select distinct oid from bookorder where uid = :userId", nativeQuery = true)
+    List<Long> findOrdersByUserId(@Param("userId") Long userId);
+
     @Query(value="select count(*) from bookorder", nativeQuery = true)
     Long getSize();
 

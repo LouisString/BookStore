@@ -1,6 +1,8 @@
 package com.light.springboot.entity;
 
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -19,6 +21,7 @@ public class Comment {
     @JoinColumn(name="id")
     private Book book;
 
+    @Type(type="text")
     private String comment;
 
     private Date date;

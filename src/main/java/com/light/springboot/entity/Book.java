@@ -1,6 +1,10 @@
 package com.light.springboot.entity;
 
 
+
+
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,12 +15,16 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+
     private String title;
     private String author;
     private String language;
     private String published;
     private String sales;
     private Long price;
+
+    @Type(type="text")
     private String description;
     private Long stock;
     private int star;

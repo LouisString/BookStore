@@ -30,6 +30,10 @@ public class User implements UserDetails {
     @JoinColumn(name="uid")
     private Set<Comment> comments;
 
+    @OneToMany(cascade = {CascadeType.ALL},fetch = FetchType.EAGER)
+    @JoinColumn(name="uid")
+    private Set<BookOrder> orders;
+
     public User(){
 
     }
@@ -64,6 +68,14 @@ public class User implements UserDetails {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Set<BookOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<BookOrder> orders) {
+        this.orders = orders;
     }
 
     @Override
