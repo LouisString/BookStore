@@ -11,10 +11,7 @@ input::-webkit-inner-spin-button{
     display:none
 }
 
-@font-face {
-    font-family: Lato-Hairline;
-    src: url("/font/Lato-HairlineItalic.ttf");
-}
+
 
 .expand {
     transition: All 0.4s ease-in-out;
@@ -83,9 +80,10 @@ input::-webkit-inner-spin-button{
 }
 
 p.title {
-    font-family: Lato-Hairline;
+    font-family: "Lato Hairline";
+    font-style: italic;
     position: absolute;
-    font-weight: bold;
+    font-weight: bolder;
     font-size: 15px;
     top: 50%;
     left: 50%;
@@ -305,9 +303,10 @@ button.buy {
 }
 
 .btitle {
-    font-family: Lato-Hairline;
+    font-family: "Lato Hairline";
     font-weight: bolder;
     font-size: 25px;
+    font-style: italic;
 
     margin-top: 5px;
 
@@ -481,9 +480,11 @@ p.bstocka {
 }
 
 .bcttitle {
-    font-family: Lato-Hairline;
+    font-family: "Lato Hairline";
     font-weight: bolder;
     font-size: 18px;
+    font-style: italic;
+
     background-color: cadetblue;
     width:auto;
     border-radius: 10px 10px 10px 10px;
@@ -496,9 +497,10 @@ p.bstocka {
 }
 
 .bctmsg {
-    font-family: Lato-Hairline;
+    font-family: "Lato Hairline";
     font-size: 20px;
     font-weight: bold;
+
 }
 
 .bctbuyb {

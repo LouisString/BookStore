@@ -1,34 +1,43 @@
 package com.light.springboot.utils;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-public class readFile {
-
-    public static Map readTxtFile(String filePath){
+public class Readfile {
+    public static String readFileByBytes(String fileName) {
+        File file = new File(fileName);
+        InputStream in = null;
+        String char_string;
+        StringBuilder sb = new StringBuilder("");
         try {
-            Map word_list = new HashMap();
-            String encoding="GBK";
-            File file=new File(filePath);
-            if(file.isFile() && file.exists()){ //判断文件是否存在
-                InputStreamReader read = new InputStreamReader(
-                        new FileInputStream(file),encoding);//考虑到编码格式
-                BufferedReader bufferedReader = new BufferedReader(read);
-                String lineTxt = null;
-                while((lineTxt = bufferedReader.readLine()) != null){
-                    word_list.put(lineTxt, 0);
-                }
-                read.close();
-                return word_list;
-            }else{
-                return new HashMap();
+
+            System.out.println("以字节为单位读取文件内容，一次读多个字节：");
+            // 一次读多个字节
+            byte[] tempbytes = new byte[200];
+            int byteread = 0;
+            in = new FileInputStream(fileName);
+            // 读入多个字节到字节数组中，byteread为一次读入的字节数
+            while ((byteread = in.read(tempbytes)) != -1) {
+                char_string = new String(tempbytes);
+                sb.append(char_string);
             }
-        } catch (Exception e) {
-            System.out.println("读取文件内容出错");
-            e.printStackTrace();
+            return sb.toString();
 
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            return "error";
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+
+                } catch (IOException e1) {
+
+                }
+            }
         }
-        return new HashMap();
-    }
 
+    }
 }

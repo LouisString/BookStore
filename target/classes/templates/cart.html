@@ -18,6 +18,7 @@
 
 <div th:insert="~{ header :: nav}"></div>
 
+
 <div th:if="${messages} != null" class="col-12 col-sm-10 col-sm-offset-1" style="margin-top: 100px">
     <div th:each="msg:${messages}" class="bctmsg" style="text-align: center">
         <p th:text="${msg}"></p>
@@ -155,6 +156,7 @@
 <script src="/js/remodal.js"></script>
 <script src="/js/addShopping.js" type="text/javascript"></script>
 
+
 <script>
 
     function deduct(id) {
@@ -277,13 +279,19 @@
         var inst3 = $('[data-remodal-id=zeromodal]').remodal();
         var state2 = inst2.getState();
         var state3 = inst3.getState();
+        var valid = 1;
         if (state2 !== 'opened'&&state2!=='opening'
             &&state3 !== 'opened' && state3 !== 'opening'){
             inst.open();
             $(document).on('confirmation', '.remodal', function () {
-                window.location = "/cart/order";
+                if (valid !== null)
+                    window.location = "/cart/order";
+            });
+            $(document).on('cancellation', '.remodal', function () {
+                valid = null;
             });
         }
     }
 </script>
+
 </html>

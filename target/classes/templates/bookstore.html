@@ -17,6 +17,7 @@
 
 <body>
     <div th:insert="~{ header :: nav}"></div>
+
     <div class="container" style="margin-top: 100px">
     <div class="col-md-8 col-md-offset-2" >
         <h1 style="text-align: center;" >Seek for books by title or author!</h1>
@@ -56,7 +57,8 @@
                             <p th:id="${book.id}+'stock'" th:text="${book.stock}" class="stock"></p>
                             <p class="stockTag">left</p>
                             <button th:value="${book.id}" type="button" onclick="showBook(this.value)" class="button  button-plain button-box button-border button-tiny detail"><i class="fa fa-tag"></i></button>
-                            <button th:id="${book.id}+'btn'" th:value="${book.id}" type="button" onclick="addToCart(this.value)" class="button button-circle button-action button-tiny buy"><i class="fa fa-plus"></i></button>
+                            <button th:id="${book.id}+'btn'" th:value="${book.id}" type="button" onclick="add(this.value)" class="button button-circle button-action button-tiny buy"><i class="fa fa-plus"></i></button>
+                            <button th:id="${book.id}+'in_btn'" th:value="${book.id}" type="button" style="display: none" onclick="addToCart(this.value)" ></button>
                         </div>
                     </div>
                 </form>
@@ -82,24 +84,39 @@
 <script src="/js/bootstrap.js"></script>
 <script src="/js/remodal.js"></script>
 <script src="/js/addShopping.js" type="text/javascript"></script>
+<script src="js/sketch.min.js"></script>
+
 <script>
+    var i = 0;
     function showBook(id) {
         window.location.assign("bookstore/book?id="+id);
     }
-    function addToCart(id){
-        var count = 1;
-        var inst = $('[data-remodal-id=infomodal]').remodal();
+    function add(id){
         var btnId = id+'btn';
+        var in_btnId = id+'in_btn';
         var imgId = id+'img';
         var imgpath = document.getElementById(imgId).name;
         $('#'+btnId).shoping({
             endElement:".cartli",
             iconCSS:"",
-            iconImg:imgpath,
-            endFunction:function(element){
-                console.log(element);
-            }
+            iconImg:imgpath
+
         });
+        if (i === 1){
+            i--;
+            addToCart(id);
+        }
+        else{
+            i++;
+            $('#'+btnId).click();
+        }
+
+    }
+    function addToCart(id){
+        //alert("haha");
+        var count = 1;
+
+        var inst = $('[data-remodal-id=infomodal]').remodal();
 
         $.get("/bookstore/addtocart?id="+id+"&count="+count, function(data, status){
             //alert("data:"+data+"\nStatus:"+status);

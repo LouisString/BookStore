@@ -22,6 +22,7 @@ public class User implements UserDetails {
 
     private String username;
     private String password;
+    private String email;
 
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     private List<Role> roles;
@@ -46,12 +47,12 @@ public class User implements UserDetails {
         this.uid = uid;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Role> getRoles() {
@@ -87,6 +88,14 @@ public class User implements UserDetails {
             System.out.println("username: "+username+"role:"+role.getName());
         }
         return auths;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

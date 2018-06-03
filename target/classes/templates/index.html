@@ -1,4 +1,4 @@
-
+<!--suppress ALL -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 
@@ -27,6 +27,7 @@
             -ms-flex-align: center;
             align-items: center;
         }
+
         .world {
             -webkit-perspective: 800px;
             perspective: 800px;
@@ -43,6 +44,7 @@
             -ms-flex-align: center;
             align-items: center;
         }
+
         .cube {
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
@@ -55,6 +57,7 @@
             animation: rotator 4.5s linear infinite;
             outline: 0;
         }
+
         .cube * {
             background: #000;
             text-align: center;
@@ -63,12 +66,15 @@
             -webkit-transition: background 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
             transition: background 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
         }
+
         .cube:hover * {
             background: currentColor;
             box-shadow: 0 0 20vh currentColor;
         }
+
         .cube .cube__front {
-            color: deeppink;
+
+            color: #D1DF7F;
             -webkit-transform: translateZ(25vh);
             transform: translateZ(25vh);
             position: absolute;
@@ -77,8 +83,9 @@
             width: 100%;
             height: 100%;
         }
+
         .cube .cube__right {
-            color: lightcoral;
+            color: #feb734;
             -webkit-transform: rotateY(90deg) translateZ(25vh);
             transform: rotateY(90deg) translateZ(25vh);
             position: absolute;
@@ -87,8 +94,9 @@
             width: 100%;
             height: 100%;
         }
+
         .cube .cube__left {
-            color: skyblue;
+            color: #E0E4CC;
             -webkit-transform: rotateY(270deg) translateZ(25vh);
             transform: rotateY(270deg) translateZ(25vh);
             position: absolute;
@@ -97,8 +105,9 @@
             width: 100%;
             height: 100%;
         }
+
         .cube .cube__back {
-            color: seagreen;
+            color: #f3f38d;
             position: absolute;
             top: 0;
             left: 0;
@@ -107,8 +116,9 @@
             -webkit-transform: rotateY(180deg) translateZ(25vh);
             transform: rotateY(180deg) translateZ(25vh);
         }
+
         .cube .cube__top {
-            color: mediumseagreen;
+            color: #ffc4c4;
             -webkit-transform: rotateX(90deg) translateZ(25vh);
             transform: rotateX(90deg) translateZ(25vh);
             position: absolute;
@@ -117,8 +127,9 @@
             width: 100%;
             height: 100%;
         }
+
         .cube .cube__bottom {
-            color: dodgerblue;
+            color: #F9D423;
             -webkit-transform: rotateX(270deg) translateZ(25vh);
             transform: rotateX(270deg) translateZ(25vh);
             position: absolute;
@@ -127,6 +138,7 @@
             width: 100%;
             height: 100%;
         }
+
         @-webkit-keyframes rotator {
             0% {
                 -webkit-transform: rotateX(0deg) rotateY(0deg);
@@ -137,6 +149,7 @@
                 transform: rotateX(360deg) rotateY(360deg);
             }
         }
+
         @keyframes rotator {
             0% {
                 -webkit-transform: rotateX(0deg) rotateY(0deg);
@@ -155,7 +168,9 @@
 
 <div th:insert="~{header :: nav}"></div>
 
-<div class="world"  style="margin-top: 100px">
+<div id="firework" style=" position:fixed;top:0px;z-index:0;"></div>
+
+<div class="world" style="margin-top: 100px">
     <div class="cube" tabindex="0">
         <div class="cube__front">b</div>
         <div class="cube__back">o</div>
@@ -169,5 +184,117 @@
 </body>
 <script src="/js/jquery-3.3.1.min.js"></script>
 <script src="/js/bootstrap.js"></script>
+<script src="js/sketch.min.js"></script>
+<script>
+
+    /* ----------------------------------------
+    /* Particle
+     */
+    function Particle(x, y, radius) {
+        this.init(x, y, radius);
+    }
+
+    Particle.prototype = {
+        init: function (x, y, radius) {
+            this.alive = true;
+            this.radius = radius || 10;
+            this.wander = 0.15;
+            this.theta = random(TWO_PI);
+            this.drag = 0.92;
+            this.color = '#f9f6d9';
+            this.x = x || 0.0;
+            this.y = y || 0.0;
+            this.vx = 0.0;
+            this.vy = 0.0;
+        },
+        move: function () {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vx *= this.drag;
+            this.vy *= this.drag;
+            this.theta += random(-0.5, 0.5) * this.wander;
+            this.vx += sin(this.theta) * 0.1;
+            this.vy += cos(this.theta) * 0.1;
+            this.radius *= 0.96;
+            this.alive = this.radius > 0.5;
+        },
+        draw: function (ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, TWO_PI);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+    };
+    /* ----------------------------------------
+    /* Example
+    */
+    var MAX_PARTICLES = 280;
+    var COLOURS = ['#D1DF7F', '#feb734', '#E0E4CC', '#f3f38d', '#fae1dd',
+        '#d9ff7e', '#F9D423'];
+    var particles = [];
+    var COLOR = '#E0E4CC';
+    var pool = [];
+    var demo = Sketch.create({
+        container: document.getElementById('firework')
+
+    });
+
+    demo.setup = function () {
+        // Set off some initial particles.
+        var i, x, y;
+        //  for ( i = 0; i < 20; i++ ) {
+        x = (demo.width * 0.5) + random(-100, 100);
+        y = (demo.height * 0.5) + random(-100, 100);
+        demo.spawn(0, 999);
+        // }
+
+    };
+
+    demo.spawn = function (x, y) {
+        if (particles.length >= MAX_PARTICLES)
+            pool.push(particles.shift());
+        particle = pool.length ? pool.pop() : new Particle();
+        particle.init(x, y, random(5, 40));
+        particle.wander = random(0.5, 2.0);
+        particle.color = random(COLOURS);
+        particle.drag = random(0.9, 0.99);
+        theta = random(TWO_PI);
+        force = random(2, 8);
+        particle.vx = sin(theta) * force;
+        particle.vy = cos(theta) * force;
+        particles.push(particle);
+    };
+
+    demo.update = function () {
+        var i, particle;
+        for (i = particles.length - 1; i >= 0; i--) {
+            particle = particles[i];
+            if (particle.alive)
+                particle.move();
+            else
+                pool.push(particles.splice(i, 1)[0]);
+        }
+    };
+
+    demo.draw = function () {
+        demo.globalCompositeOperation = 'lighter';
+        for (var i = particles.length - 1; i >= 0; i--) {
+            particles[i].draw(demo);
+        }
+    };
+
+    demo.mousemove = function () {
+        var particle, theta, force, touch, max, i, j, n;
+        for (i = 0, n = demo.touches.length; i < n; i++) {
+            touch = demo.touches[i], max = random(1, 4);
+            for (j = 0; j < max; j++) {
+                demo.spawn(touch.x, touch.y);
+            }
+        }
+    };
+
+</script>
+
+
 
 </html>

@@ -1,13 +1,11 @@
 package com.light.springboot.controller;
 
-import com.light.springboot.entity.Book;
-import com.light.springboot.entity.BookOrder;
-import com.light.springboot.entity.OrderPrimaryKey;
-import com.light.springboot.entity.User;
+import com.light.springboot.entity.*;
 import com.light.springboot.repository.BookOrderRepository;
 import com.light.springboot.repository.BookRepository;
 import com.light.springboot.repository.UserRepository;
 import com.light.springboot.utils.Base64;
+import com.light.springboot.utils.Readfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -38,7 +37,8 @@ public class UserController {
     private BookOrderRepository orderRepository;
 
 
-
+    @Autowired
+    private UserRepository userRepository;
 
     @RequestMapping("/user")
     public ModelAndView user(){
@@ -47,12 +47,60 @@ public class UserController {
         Authentication auth = ctx.getAuthentication();
         User user = (User) auth.getPrincipal();
 
+        System.out.println(user.getId());
+
         ModelAndView mav = new ModelAndView("user");
         mav.addObject("user", user);
         mav.addObject("message", null);
         mav.addObject("orders", null);
         return mav;
     }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public ModelAndView signUp(HttpServletRequest request ){
+
+        String new_name = request.getParameter("username");
+        String new_email = request.getParameter("email");
+        String new_password = request.getParameter("password");
+
+        User user = userRepository.findByUsername(new_name);
+        if (user != null){
+            ModelAndView mav = new ModelAndView("signup");
+            mav.addObject("result", "Username already used!");
+            return mav;
+        }
+
+        User new_user = new User();
+
+        new_user.setUsername(new_name);
+        new_user.setPassword(new_password);
+        new_user.setEmail(new_email);
+        Role role = new Role();
+        role.setId(Long.valueOf(2));
+        role.setName("ROLE_USER");
+        List<Role> roles = new LinkedList<>();
+        roles.add(role);
+        new_user.setRoles(roles);
+
+        userRepository.save(new_user);
+
+        Long new_id = userRepository.findByUsername(new_name).getId();
+        new_user.setId(new_id);
+        System.out.println("id:" + new_user.getId());
+
+        String base64 = Readfile.readFileByBytes("E:/课程相关文件/Grade 2-2/软工经济学/java projects/我能跑起来/src/main/resources/static/txt/base.txt");
+
+        String imgPath = new_id + "_image";
+        Base64.GenerateImage(base64, "E:/课程相关文件/Grade 2-2/软工经济学/java projects/我能跑起来/src/main/resources/static/image/users/"+imgPath+".jpg");
+
+        ModelAndView mav = new ModelAndView("user");
+        mav.addObject("user", new_user);
+        mav.addObject("message", null);
+        mav.addObject("orders", null);
+
+        return mav;
+    }
+
 
     @RequestMapping("/cart")
     @ResponseBody
