@@ -13,31 +13,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.Nullable;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookOrderRepository extends JpaRepository<BookOrder, OrderPrimaryKey> {
+public interface BookOrderRepository extends JpaRepository<BookOrder, Long> {
 
-    Optional<BookOrder> findByOrderPK(OrderPrimaryKey orderPK);
+    Optional<BookOrder> findByOid(Long oid);
 
-    @Query("select max(bookOrder.orderPK.oid) from BookOrder bookOrder")
-    Long findMaxOrderId();
 
-    @Query("select bookOrder from BookOrder bookOrder where bookOrder.orderPK.uid = :userId")
-    List<BookOrder> findByUserId(@Param("userId") Long userId);
+    List<BookOrder> findByUid(Long uid);
 
-    @Query("select bookOrder from BookOrder bookOrder where bookOrder.orderPK.oid = :orderId")
-    List<BookOrder> findByOrderId(@Param("orderId") Long orderId);
-
-    @Query(value="select distinct oid from bookorder where uid = :userId", nativeQuery = true)
-    List<Long> findOrdersByUserId(@Param("userId") Long userId);
-
-    @Query(value="select count(*) from bookorder", nativeQuery = true)
-    Long getSize();
-
-    @Modifying
     @Transactional
-    @Query(value="delete from bookorder where oid = :orderId", nativeQuery = true)
-    int deleteByOrderId(@Param("orderId") Long orderId);
+    void deleteByOid(Long oid);
+
+    List<BookOrder> findByUidAndDate(Long uid, Date date);
 
 }

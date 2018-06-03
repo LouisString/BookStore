@@ -54,7 +54,7 @@
             </form>
         </div>
     </div>
-
+    <!--Map< Map<oid, (dstate, date, total_price)>,  Map<book, count> >-->
     <div id="ordersDiv" th:if="${orders} != null" style="padding-top: 50px">
         <div class="row col-xs-offset-1">
             <button onclick="goBack()" class="button  button-rounded button-royal button-small burcmbtn">Back</button>
@@ -71,17 +71,19 @@
                            th:text="${oitemid.value.get(0)}"></p>
                     </div>
 
-                    <ul class="receipt__lines" th:each="list:${oitem.value}">
-                        <li class="receipt__line" th:each="item: ${list.key}">
+                    <ul class="receipt__lines" >
+                        <div th:each="list:${oitem.value}">
+                            <li class="receipt__line" th:each="item: ${list}">
                             <span class="receipt__line__item"
-                                  th:text="${item.key} + '('+ ${item.value.get(0)}+')'"></span>
-                            <span class="receipt__line__price" th:text="'$'+${item.value.get(1)}"></span>
-                        </li>
+                                  th:text="${item.key.getTitle()} + '('+ ${item.value}+')'"></span>
+                                <span class="receipt__line__price" th:text="'$'+${item.key.getPrice()}"></span>
+                            </li>
+                        </div>
                     </ul>
-                    <div th:each="list:${oitem.value}" class="col-12">
+                    <div th:each="oitemid:${oitem.key}" class="col-12">
                         <p class="receipt__total">
                             <span class="receipt__total__item">Total：</span>
-                            <span class="receipt__total__price" th:text="'$'+${list.value}"></span>
+                            <span class="receipt__total__price" th:text="'$'+${oitemid.value.get(2)}"></span>
                         </p>
                     </div>
                     <div th:each="oitemid:${oitem.key}">
@@ -253,6 +255,7 @@
     }
 
     function cancelOrder(oid) {
+
         var inst = $('[data-remodal-id=confirmmodal]').remodal();
         var inst2 = $('[data-remodal-id=zeromodal]').remodal();
         var state2 = inst2.getState();

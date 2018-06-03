@@ -1,74 +1,82 @@
 package com.light.springboot.entity;
 
 
+
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 
 public class BookOrder {
 
-    @EmbeddedId
-    private OrderPrimaryKey orderPK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long oid;//谁买的
 
-    private Long count;
+    private Long uid;//谁买的
 
     private String addr;
 
-    private Long price;
+    private Long total_proice;
 
     private String deliver_status;
 
     private Date date;
 
+
+    @OneToMany(cascade = {CascadeType.ALL},fetch = FetchType.EAGER)
+    @JoinColumn(name="oid")
+    private Set<BookOrderItem> items;
+
+
     public BookOrder(){
 
     }
 
-    public BookOrder(OrderPrimaryKey orderPK, Long count, String addr, Long price,
-                     String deliver_status, Date date) {
-        this.orderPK = orderPK;
-        this.count = count;
+    public BookOrder(Long oid, Long uid,  String addr, Long total_proice,
+                     String deliver_status, Date date, Set<BookOrderItem> items) {
+        this.oid = oid;
+        this.uid = uid;
         this.addr = addr;
-        this.price = price;
+        this.total_proice = total_proice;
         this.deliver_status = deliver_status;
         this.date = date;
+        this.items = items;
     }
 
-    public OrderPrimaryKey getOrderPK() {
-        return orderPK;
+    public Long getOid() {
+        return oid;
     }
 
-    public void setOrderPK(OrderPrimaryKey orderPK) {
-        this.orderPK = orderPK;
+    public void setOid(Long oid) {
+        this.oid = oid;
     }
 
-    public Long getCount() {
-        return count;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setCount(Long count) {
-        this.count = count;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
+
+    public Long getTotal_proice() {
+        return total_proice;
+    }
+
+    public void setTotal_proice(Long total_proice) {
+        this.total_proice = total_proice;
+    }
+
     public String getAddr() {
         return addr;
     }
-
 
     public void setAddr(String addr) {
         this.addr = addr;
     }
 
-    public Long getPrice() {
-        return price;
-    }
-
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
 
     public String getDeliver_status() {
         return deliver_status;
@@ -86,9 +94,17 @@ public class BookOrder {
         return date;
     }
 
-    @Override
-    public String toString() {
-        return orderPK.toString() + "; "
-                + count + "; " +addr +"; " + price + "; " +deliver_status + "; " +date.toString();
+    public Set<BookOrderItem> getItems() {
+        return items;
     }
+
+    public void setItems(Set<BookOrderItem> items) {
+        this.items = items;
+    }
+    @Override
+    public String toString(){
+        System.out.println("oid: "+this.oid+", uid: "+this.uid+"oid: ");
+        return null;
+    }
+
 }

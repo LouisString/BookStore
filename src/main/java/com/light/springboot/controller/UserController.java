@@ -155,24 +155,48 @@ public class UserController {
         Authentication auth = ctx.getAuthentication();
         User user = (User) auth.getPrincipal();
 
+        Long uid = user.getId();
+
+        System.out.println("uid: "+uid);
+
         Optional<Book> b;
         Book book;
-        Long id, count, btprice, order_id, user_id=user.getId();
+        Long id, count, btprice, oid, user_id=user.getId();
         Long tprice = Long.valueOf(0);
         Long old_stock;
         String title;
         List<Long> cplist;
-        OrderPrimaryKey PK;
+        BookOrderItem item;
         Date date = new Date();
         String deliver_status = "Not Delivered";
         String addr = "Dreamland";
-        BookOrder bookOrder;
+        Set<BookOrderItem> items;
+
         Map<String, List<Long>> binfo = new HashMap<>();
         Set<BookOrder> userOrders = user.getOrders();
 
-        order_id = (orderRepository.getSize() != 0)? orderRepository.findMaxOrderId():Long.valueOf(1);
-        order_id++;
-        System.out.println(order_id);
+        BookOrder bookOrder = new BookOrder();
+        bookOrder.setDate(date);
+        bookOrder.setAddr(addr);
+        bookOrder.setDeliver_status(deliver_status);
+
+        bookOrder.setUid(uid);
+
+
+        orderRepository.save(bookOrder);
+
+        List<BookOrder> o  = orderRepository.findByUid(uid);
+
+        oid = Long.valueOf(-1);
+        Long newid;
+
+        for (int i = 0; i<o.size();i++){
+            newid = o.get(i).getOid();
+            oid = (oid > newid)? oid : newid;
+        }
+
+        bookOrder.setOid(oid);
+
 
         Boolean shownone = false;
 
@@ -188,34 +212,54 @@ public class UserController {
             return mav;
         }
         for(Map.Entry<Long, Long> entry: cart.entrySet()){
+
             /*id means the book's id*/
             id = entry.getKey();
             count = entry.getValue();
             b = bookRepository.findById(id);
             if (b.isPresent()){
                 book = b.get();
+
                 if (book.getStock() < count){
                     continue;
                 }
                 left_cart.remove(id);
+
+                System.out.println("here");
+
+                item = new BookOrderItem();
+                item.setBook(book);
+                item.setCount(count);
+                item.setOrder(bookOrder);
+                items = bookOrder.getItems();
+                if (items == null)
+                    items = new LinkedHashSet<>();
+                items.add(item);
+                bookOrder.setItems(items);
+
                 title = book.getTitle();
                 btprice = count * (book.getPrice());
                 tprice += btprice;
                 cplist = new LinkedList<>();
                 cplist.add(count);
                 cplist.add(btprice);
+
                 old_stock = book.getStock();
                 binfo.put(title, cplist);
                 book.setStock(old_stock - count);
                 bookRepository.save(book);
+
+
+
                 System.out.println("o-c: "+(old_stock - count)+"in book: "+ book.getStock());
                 System.out.println("order success++"+id+":"+title+", btprice: "+btprice+" count: "+count);
-                PK = new OrderPrimaryKey(order_id, id, user_id);
-                bookOrder = new BookOrder(PK, count, addr, btprice, deliver_status, date);
-                orderRepository.save(bookOrder);
-                userOrders.add(bookOrder);
+
             }
         }
+
+        bookOrder.setTotal_proice(tprice);
+        orderRepository.save(bookOrder);
+        userOrders.add(bookOrder);
         user.setOrders(userOrders);
 
         for(BookOrder bOrder: user.getOrders()){
@@ -272,109 +316,44 @@ public class UserController {
             return mav;
         }
 
-        Long oid, bid, price,bprice, count, booklistprice;
-        String dstate, title, date;
-        Optional<Book> b;
-        List<Long> countAndPrice;
+        Long oid, count;
+        String dstate, date, total_price;
         Book book;
+        Map<Book,Long> book_and_count;
+        List<String> infos;
+        Map<Long, List<String>> oid_and_infos;
+        Map<Map<Long, List<String>>, Map<Book,Long>> modalOrders = new LinkedHashMap<>();
+        //Map< Map<oid, (dstate, date, total_price)>,  Map<book, count> >
 
-        List<String> dateAndDstate;
-        Map<Long, List<String>> oidAndDstate;
-        Map<String, List<Long>> bookcAndP;
-        Map<Map<String, List<Long>>, Long> booklist;
 
-        Map<Map<Long, List<String>>, Map<Map<String, List<Long>>, Long>> modalOrders = new TreeMap<Map<Long, List<String>>, Map<Map<String, List<Long>>, Long>>(new Comparator<Map<Long, List<String>>>(){
-
-            @Override
-            public int compare(Map<Long, List<String>> o1,Map<Long, List<String>> o2) {
-                int result = 0;
-                for (Long oid1:o1.keySet()){
-                    for(Long oid2:o2.keySet()){
-                        if (oid1 > oid2){
-                            result =  1;
-                            break;
-                        }
-                        else if (oid1.equals(oid2)) {
-                            result = 0;
-                            break;
-                        }
-                        else {
-                            result = -1;
-                            break;
-                        }
-                    }
-                }
-                return result;
-            }
-        });
-
-        /*同一oid的书单是绑定在一起的，作为一个整体订单*/
         for (BookOrder order:orders){
-            oid = order.getOrderPK().getOid();
+            oid = order.getOid();
             dstate = order.getDeliver_status();
             date = order.getDate().toString();
+            total_price = order.getTotal_proice().toString();
 
-            dateAndDstate = new LinkedList<>();
-            dateAndDstate.add(dstate);
-            dateAndDstate.add(date);
+            infos = new LinkedList<>();
+            infos.add(dstate);
+            infos.add(date);
+            infos.add(total_price);
 
-            oidAndDstate = new HashMap<>();
-            oidAndDstate.put(oid, dateAndDstate);
-            /*已经有该订单中部分书目，再新增该书*/
-            if (modalOrders.containsKey(oidAndDstate)){
-                booklist = modalOrders.get(oidAndDstate);
-                bid = order.getOrderPK().getBid();
-                b = bookRepository.findById(bid);
-                if (b.isPresent()){
-                    book = b.get();
-                    title = book.getTitle();
-                    price = book.getPrice();
-                    count = order.getCount();
-                    bprice = count*price;
-                    countAndPrice = new LinkedList<>();
-                    countAndPrice.add(count);
-                    countAndPrice.add(bprice);
-                    /*booklist应当只有一项，该项的key是个map，记录了所有书title和（count， price）list，该项value是总价*/
-                    for(Map<String, List<Long>> bcap: booklist.keySet()){
-                        booklistprice = booklist.get(bcap);
-                        booklistprice += bprice;
-                        booklist.remove(bcap);
-                        bcap.put(title, countAndPrice);
-                        booklist.put(bcap, booklistprice);
-                        System.out.println("-------booklist更新："+"oid: "+oid+", title: "+title+", count: "+countAndPrice.get(0)+", price: "+countAndPrice.get(1)+", 总价："+booklist.get(bcap));
-                    }
-                    /*更新， 该数不存在也不会出错*/
-                    modalOrders.put(oidAndDstate, booklist);
-                }
+            oid_and_infos = new LinkedHashMap<>();
+            oid_and_infos.put(oid, infos);
 
-            }
-            /*该订单中没有书，这是第一本书, 新建书列表*/
-            else{
-                booklist = new HashMap<>();
-                bookcAndP = new HashMap<>();
-                booklistprice = Long.valueOf(0);
-                bid = order.getOrderPK().getBid();
-                b = bookRepository.findById(bid);
-                if (b.isPresent()) {
-                    book = b.get();
-                    title = book.getTitle();
-                    price = book.getPrice();
-                    count = order.getCount();
-                    bprice = count * price;
-                    countAndPrice = new LinkedList<>();
-                    countAndPrice.add(count);
-                    countAndPrice.add(bprice);
+            book_and_count = new LinkedHashMap<>();
 
-                    bookcAndP.put(title, countAndPrice);
-                    booklistprice = bprice;
-                    System.out.println("-------booklist新建："+"oid: "+oid+", title: "+title+", count: "+countAndPrice.get(0)+", price: "+countAndPrice.get(1)+", 总价："+booklistprice);
-                }
-                /*防止该书不存在了*/
-                booklist.put(bookcAndP, booklistprice);
+            System.out.println("oid "+ oid + " start scanning, state: "+dstate+", date: "+date+", total: "+total_price);
 
-                modalOrders.put(oidAndDstate, booklist);
+            Set<BookOrderItem> items = order.getItems();
+
+            for(BookOrderItem item:items){
+                Book book1 = item.getBook();
+                count = item.getCount();
+                book_and_count.put(book1, count);
+                System.out.println(book1.getTitle() + "--count: "+ count);
             }
 
+            modalOrders.put(oid_and_infos, book_and_count);
         }
 
         ModelAndView mav = new ModelAndView("user");
@@ -396,23 +375,24 @@ public class UserController {
         Authentication auth = ctx.getAuthentication();
         User user = (User) auth.getPrincipal();
 
-        List<BookOrder> b = orderRepository.findByOrderId(oid);
+        Optional<BookOrder> b = orderRepository.findByOid(oid);
 
-        if (b.size() == 0) {
+        if (!b.isPresent()) {
             out.println("bad");
             out.close();
         } else {
-            orderRepository.deleteByOrderId(oid);
+            orderRepository.deleteByOid(oid);
             Set<BookOrder> userOldOrders = user.getOrders();
             Iterator<BookOrder> it = userOldOrders.iterator();
             for(int i=0; i<userOldOrders.size();i++){
                 BookOrder oOrder = it.next();
-                if(oOrder.getOrderPK().getOid().equals(oid)){
+                if(oOrder.getOid().equals(oid)){
                     it.remove();
                     i--;
                 }
             }
-
+            user.setOrders(userOldOrders);
+            userRepository.save(user);
             out.println("good");
             out.close();
         }
