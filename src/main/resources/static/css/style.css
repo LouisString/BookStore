@@ -498,6 +498,7 @@ p.bstocka {
 
 .bctmsg {
     font-family: "Lato Hairline";
+    font-style: italic;
     font-size: 20px;
     font-weight: bold;
 
@@ -700,17 +701,22 @@ a.magic {
 }
 
 /*图片裁剪*/
+
+
 .imageBox
 {
     height: 400px;
     width: 400px;
+    left:50%;
+    transform: translate(-50%,0);
+    position: absolute;
     border:1px solid #aaa;
     background: #fff;
     overflow: hidden;
     background-repeat: no-repeat;
     cursor:move;
     border-radius: 20px 20px 20px 20px;
-    position: relative;
+
 }
 
 .imageBox .thumbBox

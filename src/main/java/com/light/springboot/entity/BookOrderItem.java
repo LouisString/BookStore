@@ -10,7 +10,7 @@ public class BookOrderItem {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long boiId;
 
-    @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name="oid")
     private BookOrder order;//用于和bo交接
 

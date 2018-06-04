@@ -69,7 +69,7 @@ public class BookstoreController {
             Map<Long, Long> cart = ( Map<Long, Long>) session.getAttribute("cart");
             Long stock = book.get().getStock();
             if (cart==null){
-                cart=new HashMap<Long, Long>();
+                cart=new LinkedHashMap<>();
             }
             if(cart.containsKey(id)){
                 if (cart.get(id) + count > stock){

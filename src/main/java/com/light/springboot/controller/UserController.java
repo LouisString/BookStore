@@ -1,6 +1,7 @@
 package com.light.springboot.controller;
 
 import com.light.springboot.entity.*;
+import com.light.springboot.repository.BookOrderItemRepository;
 import com.light.springboot.repository.BookOrderRepository;
 import com.light.springboot.repository.BookRepository;
 import com.light.springboot.repository.UserRepository;
@@ -35,6 +36,9 @@ public class UserController {
 
     @Autowired
     private BookOrderRepository orderRepository;
+
+    @Autowired
+    private BookOrderItemRepository itemRepository;
 
 
     @Autowired
@@ -108,7 +112,7 @@ public class UserController {
         HttpSession session = request.getSession();
         Map<Long, Long> cart = (Map<Long, Long>) session.getAttribute("cart");
 
-        Map<Book, Long> items=new HashMap<>();
+        Map<Book, Long> items=new LinkedHashMap<>();
         Optional<Book> b;
         Long id;
         Long count;
@@ -161,7 +165,7 @@ public class UserController {
 
         Optional<Book> b;
         Book book;
-        Long id, count, btprice, oid, user_id=user.getId();
+        Long id, count, btprice, oid;
         Long tprice = Long.valueOf(0);
         Long old_stock;
         String title;
@@ -231,6 +235,9 @@ public class UserController {
                 item.setBook(book);
                 item.setCount(count);
                 item.setOrder(bookOrder);
+
+                itemRepository.save(item);
+
                 items = bookOrder.getItems();
                 if (items == null)
                     items = new LinkedHashSet<>();
@@ -261,6 +268,7 @@ public class UserController {
         orderRepository.save(bookOrder);
         userOrders.add(bookOrder);
         user.setOrders(userOrders);
+        userRepository.save(user);
 
         for(BookOrder bOrder: user.getOrders()){
             System.out.println(bOrder.toString());
@@ -303,7 +311,9 @@ public class UserController {
         SecurityContext ctx = SecurityContextHolder.getContext();
         Authentication auth = ctx.getAuthentication();
         User user = (User) auth.getPrincipal();
+        user = userRepository.findByUsername(user.getUsername());
 
+        System.out.println("here?");
         Set<BookOrder> orders = user.getOrders();
 
         System.out.println("orders个数: "+orders.size() );
@@ -322,7 +332,26 @@ public class UserController {
         Map<Book,Long> book_and_count;
         List<String> infos;
         Map<Long, List<String>> oid_and_infos;
-        Map<Map<Long, List<String>>, Map<Book,Long>> modalOrders = new LinkedHashMap<>();
+        Map<Map<Long, List<String>>, Map<Book,Long>> modalOrders = new TreeMap<Map<Long, List<String>>, Map<Book,Long>>(new Comparator<Map<Long, List<String>>>() {
+
+            @Override
+            public int compare(Map<Long, List<String>> o1, Map<Long, List<String>> o2) {
+                for (Map.Entry<Long, List<String>> entry1 : o1.entrySet()) {
+                    for (Map.Entry<Long, List<String>> entry2 : o2.entrySet()) {
+                        if (entry1.getKey() > entry2.getKey())
+                            return 1;
+                        else if (entry1.getKey() < (entry2.getKey()))
+                            return -1;
+                        else
+                            return 0;
+
+                    }
+                }
+                return 0;
+            }
+
+        });
+
         //Map< Map<oid, (dstate, date, total_price)>,  Map<book, count> >
 
 
@@ -368,6 +397,7 @@ public class UserController {
     @ResponseBody
     public void deleteFromOrder(Long oid, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        System.out.println("1");
         oid = Long.parseLong(request.getParameter("orderId"));
         PrintWriter out = response.getWriter();
 
@@ -377,22 +407,16 @@ public class UserController {
 
         Optional<BookOrder> b = orderRepository.findByOid(oid);
 
+        System.out.println("2");
         if (!b.isPresent()) {
             out.println("bad");
             out.close();
         } else {
+
+            System.out.println("3");
+
             orderRepository.deleteByOid(oid);
-            Set<BookOrder> userOldOrders = user.getOrders();
-            Iterator<BookOrder> it = userOldOrders.iterator();
-            for(int i=0; i<userOldOrders.size();i++){
-                BookOrder oOrder = it.next();
-                if(oOrder.getOid().equals(oid)){
-                    it.remove();
-                    i--;
-                }
-            }
-            user.setOrders(userOldOrders);
-            userRepository.save(user);
+
             out.println("good");
             out.close();
         }
