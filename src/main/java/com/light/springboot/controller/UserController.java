@@ -92,10 +92,10 @@ public class UserController {
         new_user.setId(new_id);
         System.out.println("id:" + new_user.getId());
 
-        String base64 = Readfile.readFileByBytes("E:/课程相关文件/Grade 2-2/软工经济学/java projects/我能跑起来/src/main/resources/static/txt/base.txt");
+        String base64 = Readfile.readFileByBytes("src/main/resources/static/txt/base.txt");
 
         String imgPath = new_id + "_image";
-        Base64.GenerateImage(base64, "E:/课程相关文件/Grade 2-2/软工经济学/java projects/我能跑起来/src/main/resources/static/image/users/"+imgPath+".jpg");
+        Base64.GenerateImage(base64, "src/main/resources/static/image/users/"+imgPath+".jpg");
 
         ModelAndView mav = new ModelAndView("user");
         mav.addObject("user", new_user);
