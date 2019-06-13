@@ -1,0 +1,777 @@
+html, body {
+    height: 1000px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+
+::-webkit-scrollbar {
+    display:none
+}
+
+
+
+.expand {
+    transition: All 0.4s ease-in-out;
+    -webkit-transition: All 0.4s ease-in-out;
+    -moz-transition: All 0.4s ease-in-out;
+    -o-transition: All 0.4s ease-in-out;
+}
+
+.expand:hover {
+    transform: scale(1.05);
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+}
+
+.bookItem {
+    overflow: hidden;
+    height: 100px;
+
+}
+
+.bookImg {
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: 90px;
+    float: left;
+}
+
+.bookImg > img {
+
+    border-radius: 5px 5px 5px 5px;
+
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+.bookInfo {
+    overflow: hidden;
+    position: relative;
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    height: 90px;
+    width: 65%;
+    float: left;
+    background-color: #f9f6d9;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.titleDiv {
+    position: relative;
+    top: 20%;
+    transform: translate(0, -50%);
+    height: 40px;
+    overflow: hidden;
+    background-color:#d1df7f;
+    border-radius: 10px 10px 10px 10px;
+}
+
+p.title {
+    font-family: "Lato Hairline";
+    font-style: italic;
+    position: absolute;
+    font-weight: bolder;
+    font-size: 15px;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+}
+
+p.author {
+    font-family: "Bahnschrift";
+    position: absolute;
+    font-size: 10px;
+    color: gray;
+    left: 50%;
+    top: 55%;
+    width: 80%;
+    max-height: 15px;
+    transform: translate(-50%, -50%);
+    background-color: #ffef89;
+    overflow: hidden;
+    font-weight: lighter;
+    border-radius: 10px 10px 10px 10px;
+}
+
+p.stock {
+    font-family: "Bahnschrift";
+    font-size: 12px;
+    font-weight: lighter;
+
+    top: 30%;
+
+    position: relative;
+
+    max-width: 30%;
+    text-align: center;
+    overflow: hidden;
+    float: left;
+
+}
+
+p.stockTag {
+    font-family: "Bahnschrift";
+    font-size: 12px;
+    font-style: italic;
+    font-weight: lighter;
+
+    color: gray;
+
+    top: 30%;
+
+    position: relative;
+
+    max-width: 15%;
+    text-align: center;
+    overflow: hidden;
+    float: left;
+
+}
+
+button.detail {
+
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    text-align: center;
+}
+
+button.buy {
+
+    top: 85%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    text-align: center;
+}
+
+/*星级评价*/
+
+/*初始化样式*/
+.star_evaluate {
+    position: relative;
+    width: 150px;
+    height: 30px;
+    background: url("/image/icons/star-default.png") repeat-x;
+    background-size: 30px 30px;
+    overflow: hidden;
+}
+
+.star, .score {
+    display: block;
+    height: 30px;
+    width: 30px;
+    position: absolute;
+}
+
+.star {
+    z-index: 2;
+}
+
+.score {
+    opacity: 0;
+}
+
+.star_1, .score_1 {
+    left: 0;
+}
+
+.star_1h, .score_1h {
+    left: 15px;
+}
+
+.star_2, .score_2 {
+    left: 30px;
+}
+
+.star_2h, .score_2h {
+    left: 45px;
+}
+
+.star_3, .score_3 {
+    left: 60px;
+}
+
+.star_3h, .score_3h {
+    left: 75px;
+}
+
+.star_4, .score_4 {
+    left: 90px;
+}
+
+.star_4h, .score_4h {
+    left: 105px;
+}
+
+.star_5, .score_5 {
+    left: 120px;
+}
+
+.star_5, .score_5 {
+    left: 135px;
+}
+
+/*选中之后*/
+.score:checked + .star {
+    background: url("/image/icons/star-active.png") repeat-x;
+    background-size: 30px 30px;
+    left: 0;
+}
+
+.score_1:checked + .star_1 {
+    width: 15px;
+}
+
+.score_1h:checked + .star_1h {
+    width: 30px;
+}
+
+.score_2:checked + .star_2 {
+    width: 45px;
+}
+
+.score_2h:checked + .star_2h {
+    width: 60px;
+}
+
+.score_3:checked + .star_3 {
+    width: 75px;
+}
+
+.score_3h:checked + .star_3h {
+    width: 90px;
+}
+
+.score_4:checked + .star_4 {
+    width: 105px;
+}
+
+.score_4h:checked + .star_4h {
+    width: 120px;
+}
+
+.score_5:checked + .star_5 {
+    width: 135px;
+}
+
+.score_5h:checked + .star_5h {
+    width: 150px;
+}
+
+/* these are test css*/
+
+.bitem {
+
+}
+
+.bimg {
+    overflow: hidden;
+    height: 220px;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.bimgd {
+    border-radius: 10px 10px 10px 10px;
+
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    overflow: hidden;
+    height: 220px;
+}
+
+.binfo {
+
+}
+
+.btitle {
+    font-family: "Lato Hairline";
+    font-weight: bolder;
+    font-size: 25px;
+    font-style: italic;
+
+    margin-top: 5px;
+
+    background-color:#d1df7f;
+    border-radius: 10px 10px 10px 10px;
+}
+
+.bauthor {
+    font-family: "Bahnschrift";
+    font-size: 13px;
+    margin-top: 0px;
+    color: gray;
+    background-color: #ffef89;
+    border-radius: 10px 10px 10px 10px;
+    font-weight: lighter;
+}
+
+.bbar {
+    height: 30px;
+    overflow: hidden;
+}
+
+.central {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    height: 30px;
+    width: available;
+}
+
+.bpricet {
+    font-size: 16px;
+
+    top: 50%;
+    transform: translate(0, -50%);
+    position: relative;
+    float: left;
+    background-color: #feb734;
+
+}
+
+.bpriced {
+    font-family: "Agency FB";
+    font-size: 25px;
+    font-weight: lighter;
+    color: #ff1f30;
+
+    border-radius: 10px 10px 10px 10px;
+    background-color: #f9f6d9;
+    top: 50%;
+    transform: translate(0, -50%);
+    position: relative;
+    float: left;
+}
+
+p.bstockd {
+    font-family: "Agency FB";
+    font-size: 16px;
+
+    top: 50%;
+    transform: translate(0, -50%);
+    position: relative;
+    float: left;
+}
+
+p.bstocka {
+    font-family: "Bahnschrift";
+    font-size: 13px;
+    font-weight: lighter;
+    color: gray;
+
+    top: 50%;
+    transform: translate(0, -50%);
+    position: relative;
+    float: left;
+}
+
+.stars {
+    top: 70%;
+    transform: translate(0, -50%);
+    position: relative;
+    float: left;
+    background-color:#d2af46;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.binfobar {
+    height: 90px;
+}
+
+.binfot {
+    font-family: "Letter Gothic Std";
+    font-size: 12px;
+    font-style: italic;
+
+    color: gray;
+
+    float: left;
+    background-color:#67d3cd;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.binfod {
+    font-family: "Bahnschrift";
+    font-size: 12px;
+    font-weight: lighter;
+
+    float: left;
+    background-color:#ffdfcd;
+    border-radius: 5px 5px 5px 5px;
+
+}
+
+.central2 {
+    left: 50%;
+    position: relative;
+    transform: translate(-50%, 0);
+    width: 130px;
+}
+
+.bdescribed {
+    font-family: "Bahnschrift";
+    font-size: 12px;
+    font-weight: lighter;
+
+    text-align: left;
+
+    background-color: #F8d789;
+    border-radius: 5px 5px 5px 5px;
+    border: 5px solid #d1d243;
+}
+
+.baddbtn {
+    margin-top: 10px;
+    background-color: palevioletred;
+}
+
+.balert {
+    font-size: 10px;
+}
+
+.bwarnStock {
+    float: left;
+}
+
+.bmodal {
+    font-family: "Bahnschrift";
+    font-size: 15px;
+    font-weight: lighter;
+}
+
+.bctimg {
+    overflow: hidden;
+    height: 90px;
+}
+
+.bctimgd {
+    border-radius: 5px 5px 5px 5px;
+
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    height: 90px;
+}
+
+.bctinfo {
+    background-color: cornsilk;
+}
+
+.bcttitle {
+    font-family: "Lato Hairline";
+    font-weight: bolder;
+    font-size: 18px;
+    font-style: italic;
+
+    background-color: cadetblue;
+    width:auto;
+    border-radius: 10px 10px 10px 10px;
+}
+
+.bctcount {
+    font-family: "Bahnschrift";
+    font-size: 12px;
+    font-weight: lighter;
+}
+
+.bctmsg {
+    font-family: "Lato Hairline";
+    font-style: italic;
+    font-size: 20px;
+    font-weight: bold;
+
+}
+
+.bctbuyb {
+    height: 20px;
+}
+
+.bctbuyi {
+    height: 20px;
+    text-align: center;
+    font-size: 10px;
+
+}
+
+.bctaddon {
+    position: relative;
+    transform: translate(0, -40%);
+}
+
+/* table */
+
+table {
+    border: 1px solid #ccc;
+    width: 80%;
+    margin: 0;
+    padding: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0 auto;
+}
+
+table tr {
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: center;
+    width:25%;
+}
+
+table th {
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+@media screen and (max-width: 600px) {
+
+    table {
+        border: 0;
+    }
+
+    table thead {
+        display: none;
+    }
+
+    table tr {
+        margin-bottom: 10px;
+        display: block;
+        border-bottom: 2px solid #ddd;
+    }
+
+    table td {
+        display: block;
+        text-align: right;
+        font-size: 13px;
+        border-bottom: 1px dotted #ccc;
+        width: auto;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
+
+    table td:before {
+        content: attr(data-label);
+        float: left;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+}
+
+.note {
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+button.uspotrait{
+    background-color: #e57373;
+}
+
+button.usorders{
+    background-color: #f9f6d9;
+    color: #e1d243;
+}
+
+/* 清单*/
+
+.wonder {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: #525252;
+    font-family: 'Microsoft YaHei', 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'STHeiti', 'WenQuanYi Micro Hei', 'SimSun', sans-serif;
+    font-weight: 300;
+    line-height: 1.25;
+    background: -webkit-linear-gradient(top, #00b09b, #96c93d);
+    background: linear-gradient(to bottom, #00b09b, #96c93d);
+
+}
+
+a.magic {
+    color: #5c7b25;
+    -webkit-text-decoration-skip: ink;
+    text-decoration-skip: ink;
+}
+
+.receipt {
+    position: relative;
+    -webkit-box-flex: 0;
+    -ms-flex: none;
+    flex: none;
+    background: #fff;
+    -webkit-clip-path: polygon(100% 0, 100% calc(100% - 6px), 98% 100%, 96% calc(100% - 6px), 94% 100%, 92% calc(100% - 6px), 90% 100%, 88% calc(100% - 6px), 86% 100%, 84% calc(100% - 6px), 82% 100%, 80% calc(100% - 6px), 78% 100%, 76% calc(100% - 6px), 74% 100%, 72% calc(100% - 6px), 70% 100%, 68% calc(100% - 6px), 66% 100%, 64% calc(100% - 6px), 62% 100%, 60% calc(100% - 6px), 58% 100%, 56% calc(100% - 6px), 54% 100%, 52% calc(100% - 6px), 50% 100%, 48% calc(100% - 6px), 46% 100%, 44% calc(100% - 6px), 42% 100%, 40% calc(100% - 6px), 38% 100%, 36% calc(100% - 6px), 34% 100%, 32% calc(100% - 6px), 30% 100%, 28% calc(100% - 6px), 26% 100%, 24% calc(100% - 6px), 22% 100%, 20% calc(100% - 6px), 18% 100%, 16% calc(100% - 6px), 14% 100%, 12% calc(100% - 6px), 10% 100%, 8% calc(100% - 6px), 6% 100%, 4% calc(100% - 6px), 2% 100%, 0 calc(100% - 6px), 0 0);
+    clip-path: polygon(100% 0, 100% calc(100% - 6px), 98% 100%, 96% calc(100% - 6px), 94% 100%, 92% calc(100% - 6px), 90% 100%, 88% calc(100% - 6px), 86% 100%, 84% calc(100% - 6px), 82% 100%, 80% calc(100% - 6px), 78% 100%, 76% calc(100% - 6px), 74% 100%, 72% calc(100% - 6px), 70% 100%, 68% calc(100% - 6px), 66% 100%, 64% calc(100% - 6px), 62% 100%, 60% calc(100% - 6px), 58% 100%, 56% calc(100% - 6px), 54% 100%, 52% calc(100% - 6px), 50% 100%, 48% calc(100% - 6px), 46% 100%, 44% calc(100% - 6px), 42% 100%, 40% calc(100% - 6px), 38% 100%, 36% calc(100% - 6px), 34% 100%, 32% calc(100% - 6px), 30% 100%, 28% calc(100% - 6px), 26% 100%, 24% calc(100% - 6px), 22% 100%, 20% calc(100% - 6px), 18% 100%, 16% calc(100% - 6px), 14% 100%, 12% calc(100% - 6px), 10% 100%, 8% calc(100% - 6px), 6% 100%, 4% calc(100% - 6px), 2% 100%, 0 calc(100% - 6px), 0 0);
+}
+
+.receipt__title {
+    margin-bottom: 15px;
+    padding: 0 30px;
+    font-family: 'Microsoft YaHei', 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'STHeiti', 'WenQuanYi Micro Hei', 'SimSun', sans-serif;
+    font-weight: 500;
+    font-size: 35px;
+    color: #00b09b;
+}
+
+.receipt__subtitle {
+    padding: 0 30px;
+    font-family: 'Microsoft YaHei', 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'STHeiti', 'WenQuanYi Micro Hei', 'SimSun', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+}
+
+.receipt__lines {
+    padding: 30px;
+    border-top: 1px dashed #dce2d6;
+}
+
+.receipt__line {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: 20px 0;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    font-family: 'Microsoft YaHei', 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'STHeiti', 'WenQuanYi Micro Hei', 'SimSun', sans-serif;
+    font-size: 15px;
+}
+
+.receipt__line__item {
+    font-weight: 300;
+}
+
+.receipt__line__price {
+    font-weight: 400;
+}
+
+.receipt__total {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: 10px 0;
+    padding: 20px;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    font-family: 'Microsoft YaHei', 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'STHeiti', 'WenQuanYi Micro Hei', 'SimSun', sans-serif;
+    font-size: 20px;
+    background-color: #eff7e8;
+}
+
+.receipt__total__item, .receipt__total__price {
+    font-weight: 400;
+}
+
+.receipt__back {
+    text-align: center;
+}
+
+/*图片裁剪*/
+
+
+.imageBox
+{
+    height: 400px;
+    width: 400px;
+    left:50%;
+    transform: translate(-50%,0);
+    position: absolute;
+    border:1px solid #aaa;
+    background: #fff;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    cursor:move;
+    border-radius: 20px 20px 20px 20px;
+
+}
+
+.imageBox .thumbBox
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    margin-top: -100px;
+    margin-left: -100px;
+    box-sizing: border-box;
+    border: 1px solid rgb(102, 102, 102);
+    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+    background: none repeat scroll 0% 0% transparent;
+    border-radius: 200px 200px 200px 200px;
+}
+
+/*input file 美化*/
+.imageBox .spinner
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    line-height: 400px;
+    background: rgba(0,0,0,0.7);
+}
+
+.ui_button {
+    display: inline-block;
+    line-height: 45px;
+    padding: 0 70px;
+    color: #FFFFFF;
+    font-family: "微软雅黑";
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 5px 5px 5px 5px;
+}
+.ui_button_primary {
+    background-color: #FF6600;
+}
+label.ui_button:hover {
+    background-color: #d46216;
+}
+
+.burbtns{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+button.burcmbtn{
+    background-color: #eb7a73;
+}
+
